@@ -175,6 +175,8 @@ function renderViewer(params) {
   }
 
   const tribe = getTribe(h.tribe);
+  const DESIGN_W = 540;
+  const DESIGN_H = 720;
 
   app.innerHTML = `
     <div class="page" style="padding-bottom: 0;">
@@ -184,7 +186,9 @@ function renderViewer(params) {
         <span style="width: 40px;"></span>
       </div>
       <div class="viewer-body" id="viewer-body">
-        <iframe src="/cards/${h.file}" title="${h.name} 卡片"></iframe>
+        <div class="viewer-iframe-wrap" id="iframe-wrap">
+          <iframe src="/cards/${h.file}" title="${h.name} 卡片"></iframe>
+        </div>
       </div>
       <div class="viewer-info" style="text-align: center; padding: 16px 24px 24px;">
         <div style="font-size: 11px; color: var(--dark); letter-spacing: 2px;">
@@ -197,7 +201,21 @@ function renderViewer(params) {
     </div>
   `;
 
+  // Scale iframe to fit viewport
+  function scaleIframe() {
+    const wrap = document.getElementById('iframe-wrap');
+    if (!wrap) return;
+    const vw = Math.min(window.innerWidth, 540);
+    const scale = Math.min(vw / DESIGN_W, 1);
+    wrap.style.setProperty('--iframe-scale', scale);
+    // Adjust wrapper height so it doesn't overflow (transform doesn't affect layout)
+    wrap.style.height = (DESIGN_H * scale) + 'px';
+  }
+  scaleIframe();
+  window.addEventListener('resize', scaleIframe);
+
   document.getElementById('viewer-back').addEventListener('click', () => {
+    window.removeEventListener('resize', scaleIframe);
     history.back();
   });
 }
