@@ -187,7 +187,7 @@ function renderViewer(params) {
       </div>
       <div class="viewer-body" id="viewer-body">
         <div class="viewer-iframe-wrap" id="iframe-wrap">
-          <iframe src="/cards/${h.file}" title="${h.name} 卡片"></iframe>
+          <iframe src="${import.meta.env.BASE_URL}cards/${h.file}" title="${h.name} 卡片"></iframe>
         </div>
       </div>
       <div class="viewer-info" style="text-align: center; padding: 16px 24px 24px;">
