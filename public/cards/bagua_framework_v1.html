@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八卦内外解读框架</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a18; display: flex; flex-direction: column; align-items: center; gap: 48px; padding: 48px 20px; min-height: 100vh; }
+.page-label { font-family: "PingFang SC", sans-serif; font-size: 10px; color: #444; letter-spacing: 2px; text-align: center; margin-bottom: 6px; }
+.card { width: 540px; height: 720px; background: #0a0a09; position: relative; overflow: hidden; flex-shrink: 0; border: 0.5px solid #222; }
+.card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 4px), repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(255,255,255,0.004) 7px, rgba(255,255,255,0.004) 8px); pointer-events: none; z-index: 1; }
+.inner { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 40px 44px 36px; }
+.song { font-family: "Songti SC", "Noto Serif CJK SC", serif; }
+.ping { font-family: "PingFang SC", "Noto Sans CJK SC", sans-serif; }
+:root {
+  --warm: #c9a96e; --warm-dim: #6b5a30;
+  --cold: #6a8a9a; --cold-dim: #3a5a68;
+  --light: #e8e0d4; --mid: #9e9588; --muted: #555; --dark: #444; --faint: #333; --line: #2a2a28;
+}
+.brand { font-size: 10px; color: var(--faint); letter-spacing: 2px; }
+
+/* CARD 1 */
+.intro-title { font-size: 21px; color: var(--light); letter-spacing: 5px; margin-bottom: 5px; }
+.intro-sub { font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-bottom: 20px; }
+.hex-row { display: flex; gap: 12px; align-items: center; margin-bottom: 20px; }
+.hex-group { display: flex; gap: 12px; }
+.hex-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.hex-label { font-size: 10px; letter-spacing: 1px; }
+.divider-v { width: 0.5px; height: 50px; background: #2a2a28; margin: 0 8px; }
+.s-head { font-size: 10px; letter-spacing: 5px; margin-bottom: 7px; }
+.s-head.warm { color: var(--warm); }
+.s-head.cold { color: var(--cold); }
+.s-body { font-size: 14px; color: var(--mid); line-height: 2.05; letter-spacing: 0.5px; margin-bottom: 16px; }
+.s-body em { font-style: normal; color: #d4cabb; }
+.s-body .w { color: var(--warm); }
+.s-body .c { color: var(--cold); }
+.disc { border-left: 1px solid #2a2828; padding-left: 14px; margin-top: 4px; }
+.disc p { font-size: 12.5px; color: #4a4a48; line-height: 1.95; letter-spacing: 0.3px; }
+
+/* CARD 2 & 3 */
+.t-header { margin-bottom: 16px; }
+.t-main { font-size: 17px; letter-spacing: 4px; }
+.t-main.warm { color: var(--warm); }
+.t-main.cold { color: var(--cold); }
+.t-sub { font-size: 10px; color: var(--muted); letter-spacing: 2px; margin-top: 3px; }
+.t-row { display: flex; gap: 14px; align-items: flex-start; padding-bottom: 14px; border-bottom: 0.5px solid #252523; margin-bottom: 14px; }
+.t-row:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.t-sym { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 5px; width: 60px; }
+.t-char { font-size: 11px; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
+.t-info { flex: 1; }
+.t-name-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 5px; }
+.t-name { font-size: 16px; color: var(--light); letter-spacing: 3px; }
+.t-core { font-size: 12px; letter-spacing: 2px; }
+.t-core.warm { color: var(--warm); }
+.t-core.cold { color: var(--cold); }
+.t-io { font-size: 13.5px; color: var(--mid); line-height: 1.95; letter-spacing: 0.4px; }
+.io { font-size: 10px; margin-right: 4px; letter-spacing: 1px; }
+.io.warm { color: var(--warm-dim); }
+.io.cold { color: var(--cold-dim); }
+.t-flip { font-size: 11.5px; color: #3a3a38; line-height: 1.8; letter-spacing: 0.3px; margin-top: 5px; padding-top: 5px; border-top: 0.5px solid #1e1e1c; }
+</style>
+</head>
+<body>
+
+<!-- CARD 1 -->
+<div class="page-label ping">CARD 1 · 框架说明</div>
+<div class="card">
+  <div class="inner">
+    <div class="song intro-title">八卦 · 基础解读框架</div>
+    <div class="ping intro-sub">解读易经的基础地图</div>
+
+    <div class="hex-row">
+      <div class="hex-group">
+        <!-- 乾: solid solid solid -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#6b5a30">乾</span>
+        </div>
+        <!-- 离: solid broken solid -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#6b5a30">离</span>
+        </div>
+        <!-- 震: broken broken solid -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="12" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#6b5a30">震</span>
+        </div>
+        <!-- 艮: solid broken broken -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#6b5a30">艮</span>
+        </div>
+      </div>
+      <div class="divider-v"></div>
+      <div class="hex-group">
+        <!-- 坤: broken broken broken -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="12" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#3a5a68">坤</span>
+        </div>
+        <!-- 坎: broken solid broken -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="12" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#3a5a68">坎</span>
+        </div>
+        <!-- 巽: solid solid broken -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#3a5a68">巽</span>
+        </div>
+        <!-- 兑: broken solid solid -->
+        <div class="hex-item">
+          <svg viewBox="0 0 34 46" width="36"><line x1="0" y1="9" x2="12" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span class="ping hex-label" style="color:#3a5a68">兑</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ping s-head warm">怎 么 读 这 张 图</div>
+    <div class="song s-body">
+      易经64卦，可以看作64个思维模型。<br>
+      每一个，描述一种能量处境。<br><br>
+      8个三爻卦是基础——<em>就像字母，64卦是两两组合的词</em>。<br><br>
+      <em>内卦（下卦）= 当前的内在状态</em><br>
+      <em>外卦（上卦）= 所处的外部环境</em>
+    </div>
+
+    <div class="ping s-head warm">两 种 能 量 状 态</div>
+    <div class="song s-body">
+      <span class="w">阳性</span>：生长、发动、构建<br>
+      <span class="c">阴性</span>：承接、流动、汇聚<br>
+      <span style="font-size:12px; color:#3a3a38;">颜色是视觉辅助，不是边界。每个卦都是中性的，<br>积极面和消极面同时存在，解读时结合处境判断。</span>
+    </div>
+
+    <div class="disc">
+      <p class="ping">这是我的学习探索，不是定论。<br>每个人的理解不同，处境不同，解读也会不同。<br>带着自己的思考读，比照单全收更重要。</p>
+    </div>
+
+    <div style="margin-top:auto; padding-top:12px;">
+      <span class="ping brand">@野野野在游戏人间</span>
+    </div>
+  </div>
+</div>
+
+<!-- CARD 2: YANG -->
+<div class="page-label ping">CARD 2 · 阳性四卦</div>
+<div class="card">
+  <div class="inner">
+    <div class="t-header">
+      <div class="song t-main warm">阳 性 · 四 卦</div>
+      <div class="ping t-sub">生长、发动、构建的能量状态</div>
+    </div>
+
+    <!-- 乾 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#6b5a30">乾 · 天</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">乾</span><span class="ping t-core warm">生命力</span></div>
+        <div class="song t-io">
+          <div><span class="ping io warm">在内时 ·</span>自发向上，持续运转，不需外力推动</div>
+          <div><span class="ping io warm">在外时 ·</span>强势自驱的场域，高能量要求的环境</div>
+        </div>
+        <div class="ping t-flip">另一面：停不下来，过载，或被强势场域裹挟</div>
+      </div>
+    </div>
+
+    <!-- 离 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#6b5a30">离 · 火</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">离</span><span class="ping t-core warm">感召力</span></div>
+        <div class="song t-io">
+          <div><span class="ping io warm">在内时 ·</span>自发给出温暖，向外散热，于是有了感召引力</div>
+          <div><span class="ping io warm">在外时 ·</span>有感召力的场域，光明和方向在牵引</div>
+        </div>
+        <div class="ping t-flip">另一面：内心中空，依附外部才能撑住，容易耗尽</div>
+      </div>
+    </div>
+
+    <!-- 震 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="12" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#6b5a30">震 · 雷</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">震</span><span class="ping t-core warm">爆发力</span></div>
+        <div class="song t-io">
+          <div><span class="ping io warm">在内时 ·</span>有爆发冲动，瞬间启动，强烈不持续</div>
+          <div><span class="ping io warm">在外时 ·</span>外部有突发震动，变化来得猛烈</div>
+        </div>
+        <div class="ping t-flip">另一面：三分钟热度，冲动多于持续，或被震荡裹挟</div>
+      </div>
+    </div>
+
+    <!-- 艮 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="34" y2="9" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#c9a96e" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#6b5a30">艮 · 山</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">艮</span><span class="ping t-core warm">结构力</span></div>
+        <div class="song t-io">
+          <div><span class="ping io warm">在内时 ·</span>内有章法，上升后知止，能构建秩序</div>
+          <div><span class="ping io warm">在外时 ·</span>有边界的体系，结构和规则在定形</div>
+        </div>
+        <div class="ping t-flip">另一面：框架僵化，止变成困，或体系天花板明显</div>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;"><span class="ping brand">@野野野在游戏人间</span></div>
+  </div>
+</div>
+
+<!-- CARD 3: YIN -->
+<div class="page-label ping">CARD 3 · 阴性四卦</div>
+<div class="card">
+  <div class="inner">
+    <div class="t-header">
+      <div class="song t-main cold">阴 性 · 四 卦</div>
+      <div class="ping t-sub">承接、流动、汇聚的能量状态</div>
+    </div>
+
+    <!-- 坤 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="12" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="12" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#3a5a68">坤 · 地</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">坤</span><span class="ping t-core cold">容纳</span></div>
+        <div class="song t-io">
+          <div><span class="ping io cold">在内时 ·</span>开放承接，顺应，无条件接收</div>
+          <div><span class="ping io cold">在外时 ·</span>广阔包容的场域，或沉厚的集体意志</div>
+        </div>
+        <div class="ping t-flip">另一面：失去方向，随波逐流，或被集体意志淹没</div>
+      </div>
+    </div>
+
+    <!-- 坎 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="12" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#3a5a68">坎 · 水</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">坎</span><span class="ping t-core cold">险流</span></div>
+        <div class="song t-io">
+          <div><span class="ping io cold">在内时 ·</span>处于险境忐忑，但内有实力核心</div>
+          <div><span class="ping io cold">在外时 ·</span>险阻横亘，充满不确定的外部</div>
+        </div>
+        <div class="ping t-flip">另一面：被险困住出不去，内在实力无法发挥</div>
+      </div>
+    </div>
+
+    <!-- 巽 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="12" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#3a5a68">巽 · 风</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">巽</span><span class="ping t-core cold">流通</span></div>
+        <div class="song t-io">
+          <div><span class="ping io cold">在内时 ·</span>柔顺入局，以流通交互代替对抗</div>
+          <div><span class="ping io cold">在外时 ·</span>信息四面流传，分散的交互场</div>
+        </div>
+        <div class="ping t-flip">另一面：根基不稳，方向感弱，容易被外部带跑</div>
+      </div>
+    </div>
+
+    <!-- 兑 -->
+    <div class="t-row">
+      <div class="t-sym">
+        <svg viewBox="0 0 34 46" width="48"><line x1="0" y1="9" x2="12" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="9" x2="34" y2="9" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="23" x2="34" y2="23" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/><line x1="0" y1="37" x2="34" y2="37" stroke="#6a8a9a" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span class="ping t-char" style="color:#3a5a68">兑 · 泽</span>
+      </div>
+      <div class="t-info">
+        <div class="t-name-row"><span class="song t-name">兑</span><span class="ping t-core cold">汇聚</span></div>
+        <div class="song t-io">
+          <div><span class="ping io cold">在内时 ·</span>东西徐徐流来聚集，内有悦，感受到汇聚的喜悦</div>
+          <div><span class="ping io cold">在外时 ·</span>开放的汇聚场，吸引力向中心集</div>
+        </div>
+        <div class="ping t-flip">另一面：注意力分散，能量往外散但不聚，关系流于表面</div>
+      </div>
+    </div>
+
+    <div style="margin-top:auto;"><span class="ping brand">@野野野在游戏人间</span></div>
+  </div>
+</div>
+
+</body>
+</html>

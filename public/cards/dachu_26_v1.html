@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大畜·26 v1</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #1a1a18;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  padding: 48px 20px;
+  min-height: 100vh;
+}
+
+.page-label {
+  font-family: "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  font-size: 10px;
+  color: #444;
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.card {
+  width: 540px;
+  height: 720px;
+  background: #0a0a09;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 0.5px solid #222;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(255,255,255,0.004) 7px, rgba(255,255,255,0.004) 8px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.song { font-family: "Songti SC", "Noto Serif CJK SC", "SimSun", serif; }
+.ping { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+
+:root {
+  --warm: #c9a96e;
+  --warm-dim: #6b5a30;
+  --light: #e8e0d4;
+  --mid: #9e9588;
+  --muted: #555;
+  --dark: #444;
+  --faint: #333;
+  --line: #2a2a28;
+}
+
+.brand { font-size: 10px; color: var(--faint); letter-spacing: 2px; }
+
+/* ===== COVER ===== */
+.cover .inner { padding: 44px 44px 36px; justify-content: space-between; }
+.cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, rgba(201,169,110,0.04) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+.cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.cover-tag { font-size: 10px; letter-spacing: 3px; color: var(--muted); border: 0.5px solid var(--line); padding: 4px 10px; }
+.cover-num { font-size: 11px; letter-spacing: 1.5px; color: var(--dark); }
+.cover-center { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.cover-title-row { display: flex; align-items: baseline; gap: 16px; }
+.cover-title { font-size: 52px; color: var(--light); letter-spacing: 14px; font-weight: 400; margin-left: 14px; }
+.cover-subtitle { font-size: 12px; color: var(--dark); letter-spacing: 2px; }
+.cover-hook { padding: 0 4px; }
+.hook-main { font-size: 18px; color: var(--light); letter-spacing: 1.5px; line-height: 2.1; margin-bottom: 14px; }
+.hook-main em { font-style: normal; color: var(--warm); }
+.hook-flip { font-size: 13.5px; color: #777; letter-spacing: 0.5px; line-height: 2; }
+.hook-flip em { font-style: normal; color: #a09585; }
+.hook-flip .key { color: var(--warm); font-style: normal; }
+.cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.series-tag { font-size: 9px; color: #3a3a38; letter-spacing: 2px; }
+
+/* ===== INSIGHT ===== */
+.insight .inner { padding: 44px 44px 36px; justify-content: space-between; }
+.card2-header { display: flex; align-items: baseline; gap: 12px; }
+.card2-title { font-size: 20px; color: var(--light); letter-spacing: 3px; }
+.card2-badge { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+.section-label { font-size: 10px; color: var(--warm); letter-spacing: 5px; margin-bottom: 8px; margin-top: 16px; }
+.section-body { font-size: 13.5px; color: var(--mid); line-height: 2.0; letter-spacing: 0.5px; }
+.section-body em { color: #d4cabb; font-style: normal; }
+.section-body .key { color: var(--warm); font-style: normal; }
+.divider { width: 24px; height: 0.5px; background: var(--line); margin: 10px 0; }
+.pullquote { border-left: 1.5px solid var(--warm); padding-left: 14px; margin-top: 10px; }
+.pullquote p { font-size: 14px; color: var(--warm); letter-spacing: 1px; line-height: 2; }
+
+/* ===== DIAGRAM ===== */
+.diagram .inner { padding: 40px 36px 36px; justify-content: space-between; align-items: center; }
+.diagram-title { font-size: 12px; color: var(--muted); letter-spacing: 4px; text-align: center; }
+.diagram-body { width: 100%; }
+.diagram-insight { font-size: 13.5px; color: var(--mid); line-height: 2.1; letter-spacing: 0.5px; text-align: left; padding: 0 12px; }
+.diagram-insight em { color: #d4cabb; font-style: normal; }
+.diagram-insight .key { color: var(--warm); }
+</style>
+</head>
+<body>
+
+<!-- ===== CARD 1: COVER ===== -->
+<div class="page-label ping">CARD 1 · 封面</div>
+<div class="card cover">
+  <div class="inner">
+    <div class="cover-top">
+      <span class="ping cover-tag">蓄 积</span>
+      <span class="ping cover-num">第 26 卦</span>
+    </div>
+
+    <div class="cover-center">
+      <div class="cover-title-row">
+        <span class="song cover-title">大 畜</span>
+        <span class="ping cover-subtitle">山天大畜</span>
+      </div>
+
+      <div>
+        <svg viewBox="0 0 240 204" width="220">
+          <defs>
+            <radialGradient id="cg" cx="50%" cy="35%" r="38%">
+              <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.09"/>
+              <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="240" height="115" fill="url(#cg)"/>
+
+          <text x="120" y="13" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="3">艮 · 山</text>
+
+          <!-- 上卦 艮: 上爻阳(实), 五爻阴(断), 四爻阴(断) -->
+          <line x1="32" y1="34" x2="208" y2="34" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="60" x2="108" y2="60" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="60" x2="208" y2="60" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="86" x2="108" y2="86" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="86" x2="208" y2="86" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+
+          <line x1="50" y1="108" x2="190" y2="108" stroke="#1e1e1c" stroke-width="0.5" stroke-dasharray="2,5"/>
+
+          <!-- 下卦 乾: 三爻阳, 二爻阳, 初爻阳 (全实) -->
+          <line x1="32" y1="130" x2="208" y2="130" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="156" x2="208" y2="156" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="182" x2="208" y2="182" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+
+          <text x="120" y="202" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="3">乾 · 天</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="cover-hook">
+      <div class="song hook-main">
+        在一个地方积累了很久。<br>
+        总觉得再沉淀一下，<em>时机会更好</em>。
+      </div>
+      <div class="song hook-flip">
+        大畜，积累到了，是往外用的阶段。<br>
+        这不是再等一等的卦。<br>
+        如果你在那里待了很久，<br>
+        <span class="key">该问的不是「还要多久」——<br>
+        是什么在拦着你。</span>
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <span class="ping brand">@野野野在游戏人间</span>
+      <span class="ping series-tag">易经 · 情境识别</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== CARD 2: INSIGHT + ACTION ===== -->
+<div class="page-label ping">CARD 2 · 洞见与行动</div>
+<div class="card insight">
+  <div class="inner">
+    <div class="card2-header">
+      <span class="song card2-title">大畜 · 26</span>
+      <span class="ping card2-badge">山天大畜</span>
+    </div>
+
+    <div>
+      <div class="ping section-label">这 个 卦 在 说 什 么</div>
+      <div class="song section-body">
+        乾在内，能量充沛，一直往上走。<br>
+        艮在外，有结构的体系——<br>
+        组织、平台，给了你成长的空间和规则。<br><br>
+        在某个阶段，这里是在<em>养</em>你的。<br>
+        但同一个地方，时间久了会变。<br><br>
+        象传「<em>君子以多识前言往行，以畜其德</em>」——<br>
+        在这里积累的，是<span class="key">德</span>，是在真实处境里走过的判断力。
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="ping section-label">怎 么 做</div>
+      <div class="song section-body">
+        九三爻：「<em>良马逐，日闲舆卫，利有攸往</em>」——<br>
+        好马每天在场地里训练，<br>
+        但训练的目的是出去跑，不是一直练。<br><br>
+        卦辞「<span class="key">不家食，吉，利涉大川</span>」——<br>
+        积累始终是为了取用的。
+      </div>
+    </div>
+
+    <div class="pullquote">
+      <p class="song">你在这里沉淀的东西，<br>是还在往里走，<br>还是已经到了可以往外走的时候？</p>
+    </div>
+
+    <div style="margin-top:auto;">
+      <span class="ping brand">@野野野在游戏人间</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== CARD 3: ENERGY DIAGRAM ===== -->
+<div class="page-label ping">CARD 3 · 能量图解</div>
+<div class="card diagram">
+  <div class="inner">
+    <div>
+      <span class="ping diagram-title">大 畜 · 能 量 结 构</span>
+    </div>
+
+    <div class="diagram-body">
+      <svg viewBox="0 0 460 340" width="460" style="display:block; margin:0 auto;">
+        <defs>
+          <radialGradient id="g3" cx="50%" cy="30%" r="35%">
+            <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.09"/>
+            <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="0" y="0" width="460" height="175" fill="url(#g3)"/>
+
+        <!-- UPPER: 艮 Mountain -->
+        <text x="230" y="18" text-anchor="middle" fill="#6b5a30" font-size="10" font-family="PingFang SC, sans-serif" letter-spacing="4">外 卦 · 艮 · 山</text>
+        <rect x="90" y="30" width="280" height="110" rx="2" fill="none" stroke="#4a3d20" stroke-width="0.5" stroke-dasharray="3,4"/>
+
+        <!-- 艮 trigram: 实(上爻) 断 断 -->
+        <line x1="170" y1="56" x2="290" y2="56" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="170" y1="80" x2="218" y2="80" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="80" x2="290" y2="80" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="170" y1="104" x2="218" y2="104" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="104" x2="290" y2="104" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- 艮 energy: 上升后止 -->
+        <line x1="128" y1="102" x2="128" y2="58" stroke="#c9a96e" stroke-width="0.5" opacity="0.45"/>
+        <path d="M125 63 L128 56 L131 63" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.45"/>
+        <line x1="120" y1="52" x2="136" y2="52" stroke="#c9a96e" stroke-width="1.5" opacity="0.6"/>
+        <line x1="332" y1="102" x2="332" y2="58" stroke="#c9a96e" stroke-width="0.5" opacity="0.45"/>
+        <path d="M329 63 L332 56 L335 63" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.45"/>
+        <line x1="324" y1="52" x2="340" y2="52" stroke="#c9a96e" stroke-width="1.5" opacity="0.6"/>
+
+        <text x="106" y="82" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">有边界</text>
+        <text x="355" y="72" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">主动收</text>
+
+        <!-- BOUNDARY: 蓄 -->
+        <line x1="70" y1="166" x2="390" y2="166" stroke="#3d3020" stroke-width="1" stroke-dasharray="1.5,4"/>
+        <text x="405" y="170" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif">蓄</text>
+        <text x="195" y="162" text-anchor="middle" fill="#6b5a30" font-size="11" font-family="PingFang SC, sans-serif" opacity="0.55">↑</text>
+        <text x="230" y="162" text-anchor="middle" fill="#6b5a30" font-size="11" font-family="PingFang SC, sans-serif" opacity="0.55">↑</text>
+        <text x="265" y="162" text-anchor="middle" fill="#6b5a30" font-size="11" font-family="PingFang SC, sans-serif" opacity="0.55">↑</text>
+
+        <!-- LOWER: 乾 Heaven -->
+        <rect x="90" y="186" width="280" height="110" rx="2" fill="none" stroke="#4a3d20" stroke-width="0.5" stroke-dasharray="3,4"/>
+
+        <!-- 乾 trigram: 实实实 -->
+        <line x1="170" y1="214" x2="290" y2="214" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="170" y1="240" x2="290" y2="240" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="170" y1="266" x2="290" y2="266" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- 乾 energy: steady upward -->
+        <line x1="128" y1="272" x2="128" y2="208" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <path d="M125 213 L128 206 L131 213" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <line x1="332" y1="272" x2="332" y2="208" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <path d="M329 213 L332 206 L335 213" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+
+        <text x="106" y="244" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">充沛</text>
+        <text x="355" y="234" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">向上</text>
+
+        <text x="230" y="316" text-anchor="middle" fill="#6b5a30" font-size="10" font-family="PingFang SC, sans-serif" letter-spacing="4">内 卦 · 乾 · 天</text>
+        <text x="230" y="338" text-anchor="middle" fill="#555" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="2">乾力充沛 → 艮主动收 → 蓄极待用 · 何天之衢，亨</text>
+      </svg>
+    </div>
+
+    <div>
+      <div class="song diagram-insight">
+        乾，能量充沛，持续向上。<br>
+        艮主动收住它——不是阻断，是<span class="key">蓄</span>。<br><br>
+        <em>这个组织、这个平台，是在养你，还是在困你？</em><br>
+        这个问题，比「还要多久」更值得想。
+      </div>
+      <div style="margin-top:12px;">
+        <span class="ping brand">@野野野在游戏人间</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

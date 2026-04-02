@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易经·八种处境</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a18; display: flex; flex-direction: column; align-items: center; padding: 48px 20px; }
+.page-label { font-family: "PingFang SC", sans-serif; font-size: 10px; color: #444; letter-spacing: 2px; text-align: center; margin-bottom: 6px; }
+.card { width: 540px; height: 720px; background: #0a0a09; position: relative; overflow: hidden; border: 0.5px solid #222; }
+.card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.004) 3px, rgba(255,255,255,0.004) 4px); pointer-events: none; z-index: 1; }
+.inner { position: relative; z-index: 2; width: 100%; height: 100%; padding: 26px 24px 18px; display: flex; flex-direction: column; }
+.song { font-family: "Songti SC", "Noto Serif CJK SC", "SimSun", serif; }
+.ping { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+
+.header { text-align: center; flex-shrink: 0; margin-bottom: 6px; }
+.header-tag { font-size: 9px; color: #555; letter-spacing: 3px; }
+.header-title { font-size: 24px; color: #e8e0d4; letter-spacing: 8px; margin: 4px 0; }
+.header-q { font-size: 11px; color: #555; letter-spacing: 2.5px; }
+.header-line { width: 24px; height: 0.5px; background: #252523; margin: 6px auto 0; }
+
+.section-label {
+  font-family: "PingFang SC", sans-serif;
+  font-size: 8px;
+  color: #3a3a38;
+  letter-spacing: 4px;
+  text-align: center;
+  margin: 3px 0 2px;
+  flex-shrink: 0;
+}
+
+.grid {
+  flex: 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 5px;
+}
+.grid-independent {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.module {
+  background: rgba(255,255,255,0.013);
+  border: 0.5px solid #1e1e1c;
+  border-radius: 2px;
+  padding: 7px 12px 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.module::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.007) 0%, transparent 70%);
+  pointer-events: none;
+}
+.module.independent {
+  border-color: #1a1e20;
+  background: rgba(106,138,154,0.02);
+}
+
+.mod-context {
+  font-family: "PingFang SC", sans-serif;
+  font-size: 11px;
+  color: #686866;
+  letter-spacing: 0.8px;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+}
+
+.mod-sep {
+  width: 14px;
+  height: 0.5px;
+  background: rgba(201, 169, 110, 0.22);
+  margin: 2px 0;
+}
+.module.independent .mod-sep {
+  background: rgba(106, 138, 154, 0.25);
+}
+
+.mod-question {
+  font-family: "Songti SC", "Noto Serif CJK SC", serif;
+  font-size: 17px;
+  color: #cfc7bb;
+  letter-spacing: 1.5px;
+  line-height: 1.5;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.mod-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto;
+  padding-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+.mod-tribe {
+  font-family: "PingFang SC", sans-serif;
+  font-size: 10px;
+  color: #555;
+  letter-spacing: 1.5px;
+}
+.mod-hexagrams {
+  font-family: "PingFang SC", sans-serif;
+  font-size: 8px;
+  color: #3a3a38;
+  letter-spacing: 0.5px;
+  text-align: right;
+  max-width: 60%;
+  line-height: 1.4;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.brand { font-size: 9px; color: #333; letter-spacing: 2px; }
+.series-tag { font-size: 8px; color: #2a2a28; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+
+<div class="page-label ping">易经 · 64卦 · 八种处境总览</div>
+<div class="card">
+  <div class="inner">
+    <div class="header">
+      <div class="ping header-tag">易经 · 情境识别</div>
+      <div class="song header-title">八种处境</div>
+      <div class="ping header-q">64卦，八个站位</div>
+      <div class="header-line"></div>
+    </div>
+
+    <div class="section-label">势 的 循 环</div>
+    <div class="grid">
+      <!-- ① 蓄积 -->
+      <div class="module">
+        <div>
+          <div class="mod-context">势在蓄，还没释放</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么积累？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">① 蓄积</span>
+          <span class="mod-hexagrams">屯 蒙 需 比<br>小畜 履 大畜 萃</span>
+        </div>
+      </div>
+      <!-- ② 扩张 -->
+      <div class="module">
+        <div>
+          <div class="mod-context">势起来了，在流动</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么乘势？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">② 扩张</span>
+          <span class="mod-hexagrams">乾 泰 大有 临<br>大壮 晋 夬 升</span>
+        </div>
+      </div>
+      <!-- ③ 受阻 -->
+      <div class="module">
+        <div>
+          <div class="mod-context">势被卡了，推不动</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么突破？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">③ 受阻</span>
+          <span class="mod-hexagrams">讼 否 坎 蹇<br>困 明夷 解 震</span>
+        </div>
+      </div>
+      <!-- ④ 收敛 -->
+      <div class="module">
+        <div>
+          <div class="mod-context">势该收了，主动减</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么守住？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">④ 收敛</span>
+          <span class="mod-hexagrams">坤 谦 艮 剥<br>遁 豫 旅 姤</span>
+        </div>
+      </div>
+      <!-- ⑤ 转折 -->
+      <div class="module">
+        <div>
+          <div class="mod-context">势到拐点了</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么跨越？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">⑤ 转折</span>
+          <span class="mod-hexagrams">既济 未济 丰 渐<br>恒 益 小过 无妄</span>
+        </div>
+      </div>
+      <!-- ⑥ 重构 -->
+      <div class="module">
+        <div>
+          <div class="mod-context">旧势散了，要重建</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么重建？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">⑥ 重构</span>
+          <span class="mod-hexagrams">革 鼎 蛊 井<br>噬嗑 涣 大过 损</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">独 立 维 度</div>
+    <div class="grid-independent">
+      <!-- ⑦ 连接 -->
+      <div class="module independent">
+        <div>
+          <div class="mod-context">势在人和人之间</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么协作？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">⑦ 连接</span>
+          <span class="mod-hexagrams">同人 家人 睽 咸<br>兑 师 随 归妹</span>
+        </div>
+      </div>
+      <!-- ⑧ 校准 -->
+      <div class="module independent">
+        <div>
+          <div class="mod-context">偏了，要归正</div>
+          <div class="mod-sep"></div>
+          <div class="song mod-question">怎么归正？</div>
+        </div>
+        <div class="mod-bottom">
+          <span class="mod-tribe">⑧ 校准</span>
+          <span class="mod-hexagrams">颐 复 中孚 节<br>离 巽 观 贲</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="ping brand">@野野野在游戏人间</span>
+      <span class="ping series-tag">易经 · 情境识别</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

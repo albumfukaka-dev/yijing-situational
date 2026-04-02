@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蓄积·积累期的八种处境</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a18; display: flex; flex-direction: column; align-items: center; padding: 48px 20px; }
+.page-label { font-family: "PingFang SC", sans-serif; font-size: 10px; color: #444; letter-spacing: 2px; text-align: center; margin-bottom: 6px; }
+.card { width: 540px; height: 720px; background: #0a0a09; position: relative; overflow: hidden; border: 0.5px solid #222; }
+.card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.004) 3px, rgba(255,255,255,0.004) 4px); pointer-events: none; z-index: 1; }
+.inner { position: relative; z-index: 2; width: 100%; height: 100%; padding: 26px 24px 18px; display: flex; flex-direction: column; }
+.song { font-family: "Songti SC", "Noto Serif CJK SC", "SimSun", serif; }
+.ping { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+
+.header { text-align: center; flex-shrink: 0; margin-bottom: 10px; }
+.header-tag { font-size: 9px; color: #555; letter-spacing: 3px; }
+.header-title { font-size: 24px; color: #e8e0d4; letter-spacing: 8px; margin: 4px 0; }
+.header-q { font-size: 11px; color: #555; letter-spacing: 2.5px; }
+.header-line { width: 24px; height: 0.5px; background: #252523; margin: 8px auto 0; }
+
+.grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.module {
+  background: rgba(255,255,255,0.013);
+  border: 0.5px solid #1e1e1c;
+  border-radius: 2px;
+  padding: 8px 13px 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.module::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.007) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* 上层：处境 */
+.mod-context {
+  font-family: "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  font-size: 12px;
+  color: #686866;
+  letter-spacing: 0.8px;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+}
+
+/* 分隔线 */
+.mod-sep {
+  width: 14px;
+  height: 0.5px;
+  background: rgba(201, 169, 110, 0.22);
+  margin: 3px 0 3px;
+}
+
+/* 下层：建议 */
+.mod-advice {
+  font-family: "Songti SC", "Noto Serif CJK SC", "SimSun", serif;
+  font-size: 15px;
+  color: #cfc7bb;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+/* 底部：卦名 + 卦象 */
+.mod-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  margin-top: auto;
+  padding-top: 3px;
+  position: relative;
+  z-index: 1;
+}
+.mod-name {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.mod-fullname { font-size: 9px; color: #454543; letter-spacing: 0.5px; line-height: 1.3; }
+.mod-guaname { font-size: 10px; color: #636361; letter-spacing: 1px; line-height: 1.3; }
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-shrink: 0;
+  margin-top: 7px;
+}
+.brand { font-size: 9px; color: #333; letter-spacing: 2px; }
+.series-tag { font-size: 8px; color: #2a2a28; letter-spacing: 2px; }
+</style>
+</head>
+<body>
+
+<div class="page-label ping">蓄积族 · 积累期的八种处境</div>
+<div class="card">
+  <div class="inner">
+    <div class="header">
+      <div class="ping header-tag">情境 ① · 蓄积</div>
+      <div class="song header-title">怎么积累？</div>
+      <div class="ping header-q">积累期，八种不同的样子</div>
+      <div class="header-line"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="footer">
+      <span class="ping brand">@野野野在游戏人间</span>
+      <span class="ping series-tag">易经 · 情境识别</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function triColor(a,b,c) {
+  return ['111','101','001','100'].includes(`${a}${b}${c}`) ? '#c9a96e' : '#6a8a9a';
+}
+
+function drawGua(yao) {
+  const w=28, h=20, gap=3, lw=1;
+  const cUp = triColor(yao[0],yao[1],yao[2]);
+  const cLo = triColor(yao[3],yao[4],yao[5]);
+  let s = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">`;
+  for (let i=0;i<6;i++) {
+    const y = 1 + i*gap;
+    const c = i<3 ? cUp : cLo;
+    if (yao[i]===1) {
+      s += `<line x1="1" y1="${y}" x2="${w-1}" y2="${y}" stroke="${c}" stroke-width="${lw}" stroke-linecap="round"/>`;
+    } else {
+      const m=w/2;
+      s += `<line x1="1" y1="${y}" x2="${m-2.5}" y2="${y}" stroke="${c}" stroke-width="${lw}" stroke-linecap="round"/>`;
+      s += `<line x1="${m+2.5}" y1="${y}" x2="${w-1}" y2="${y}" stroke="${c}" stroke-width="${lw}" stroke-linecap="round"/>`;
+    }
+  }
+  s+='</svg>'; return s;
+}
+
+const data = [
+  {
+    full: '水雷', name: '屯·03', y: [0,1,0,0,0,1],
+    context: '破土期，险阻横亘',
+    advice: '难，是开始的证据\n在阻力里积'
+  },
+  {
+    full: '山水', name: '蒙·04', y: [1,0,0,0,1,0],
+    context: '躲着，不去弄懂',
+    advice: '带着问题去试\n行险本身是学'
+  },
+  {
+    full: '水天', name: '需·05', y: [0,1,0,1,1,1],
+    context: '能量足，被条件卡住',
+    advice: '时机未到\n用好这段等待'
+  },
+  {
+    full: '水地', name: '比·08', y: [0,1,0,0,0,0],
+    context: '险中靠近，积累在关系里',
+    advice: '辨别靠近谁\n同忧相亲'
+  },
+  {
+    full: '风天', name: '小畜·09', y: [1,1,0,1,1,1],
+    context: '能量向外，分散，密度低',
+    advice: '这个阶段\n积的是广度'
+  },
+  {
+    full: '天泽', name: '履·10', y: [1,1,1,0,1,1],
+    context: '在强势系统里找步调',
+    advice: '跟不上的那一步\n才是积累'
+  },
+  {
+    full: '山天', name: '大畜·26', y: [1,0,0,1,1,1],
+    context: '越压越厚，还没出去',
+    advice: '继续积？\n还是该出去取用了？'
+  },
+  {
+    full: '泽地', name: '萃·45', y: [0,1,1,0,0,0],
+    context: '东西开始往你这里聚',
+    advice: '能成为那个\n值得来的地方吗？'
+  },
+];
+
+const grid = document.getElementById('grid');
+data.forEach(d => {
+  const m = document.createElement('div');
+  m.className = 'module';
+  const adviceHtml = d.advice.split('\n').join('<br>');
+  m.innerHTML = `
+    <div>
+      <div class="ping mod-context">${d.context}</div>
+      <div class="mod-sep"></div>
+      <div class="song mod-advice">${adviceHtml}</div>
+    </div>
+    <div class="mod-bottom">
+      <div class="mod-name">
+        <span class="ping mod-fullname">${d.full}</span>
+        <span class="ping mod-guaname">${d.name}</span>
+      </div>
+      ${drawGua(d.y)}
+    </div>`;
+  grid.appendChild(m);
+});
+</script>
+</body>
+</html>

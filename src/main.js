@@ -1,0 +1,441 @@
+import './style.css';
+import {
+  TRIBES, HEXAGRAMS,
+  getHexagramsByTribe, getTribe, getHexagram, getTribeProgress,
+  getRandomHexagram, searchHexagrams, getAllHexagramsSorted, getYaoLines,
+  getTrigramEnergy
+} from './data.js';
+
+// ============================================
+// Router
+// ============================================
+const routes = {};
+function route(path, handler) { routes[path] = handler; }
+function navigate(hash) { window.location.hash = hash; }
+
+function matchRoute(hash) {
+  const path = hash.replace('#', '') || '/';
+  // Try exact match
+  if (routes[path]) return { handler: routes[path], params: {} };
+  // Try parameterized routes
+  for (const pattern of Object.keys(routes)) {
+    const paramNames = [];
+    const regex = pattern.replace(/:(\w+)/g, (_, name) => {
+      paramNames.push(name);
+      return '([^/]+)';
+    });
+    const match = path.match(new RegExp(`^${regex}$`));
+    if (match) {
+      const params = {};
+      paramNames.forEach((name, i) => params[name] = match[i + 1]);
+      return { handler: routes[pattern], params };
+    }
+  }
+  return { handler: routes['/'], params: {} };
+}
+
+// ============================================
+// Render Helpers
+// ============================================
+const app = document.getElementById('app');
+
+function renderYaoMini(hexagram) {
+  const yao = getYaoLines(hexagram);
+  const upperEnergy = getTrigramEnergy(hexagram.upper);
+  const lowerEnergy = getTrigramEnergy(hexagram.lower);
+  // Display top-to-bottom (reverse of bottom-to-top data)
+  // yao[0-2] = lower trigram, yao[3-5] = upper trigram
+  // reversed[0-2] = upper trigram, reversed[3-5] = lower trigram
+  const lines = [...yao].reverse();
+  return lines.map((y, i) => {
+    const energy = i < 3 ? upperEnergy : lowerEnergy; // top 3 = upper, bottom 3 = lower
+    const shape = y ? 'solid' : 'broken';
+    return `<div class="yao-line ${shape} ${energy}"></div>`;
+  }).join('');
+}
+
+function renderNav(active = '') {
+  const items = [
+    { id: 'home', icon: '☰', label: '情境', hash: '#/' },
+    { id: 'divine', icon: '◎', label: '抽卦', hash: '#/divine' },
+    { id: 'list', icon: '≡', label: '索引', hash: '#/list' },
+    { id: 'about', icon: '◇', label: '关于', hash: '#/about' },
+  ];
+  return `
+    <nav class="bottom-nav">
+      ${items.map(item => `
+        <a href="${item.hash}" class="nav-item ${active === item.id ? 'active' : ''}" data-nav="${item.id}">
+          <span class="nav-icon">${item.icon}</span>
+          <span class="nav-label">${item.label}</span>
+        </a>
+      `).join('')}
+    </nav>
+  `;
+}
+
+// ============================================
+// Pages
+// ============================================
+
+// --- Homepage ---
+function renderHome() {
+  const tribeCards = TRIBES.map(tribe => {
+    const progress = getTribeProgress(tribe.id);
+    const isComplete = progress.done === progress.total;
+    const pct = (progress.done / progress.total * 100).toFixed(0);
+    return `
+      <div class="tribe-card" style="--accent: ${tribe.color}" onclick="location.hash='#/tribe/${tribe.id}'">
+        <div class="tribe-icon-row">
+          <div class="tribe-icon" style="background: ${tribe.color}">${tribe.icon}</div>
+          <span class="tribe-num">族 ${String(tribe.id).padStart(2, '0')}</span>
+        </div>
+        <div class="tribe-name">${tribe.name}</div>
+        <div class="tribe-question">${tribe.question}</div>
+        <div class="tribe-progress">
+          ${isComplete
+            ? `<span class="tribe-complete-badge">✓ 全部完成</span>`
+            : `<div class="tribe-progress-bar"><div class="tribe-progress-fill" style="width: ${pct}%; background: ${tribe.color}"></div></div>
+               <span class="tribe-progress-text">${progress.done}/${progress.total}</span>`
+          }
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="page">
+      <header class="home-header">
+        <div class="home-brand">易经 · <span>情境识别</span></div>
+        <div class="home-sub">在 64 种处境中，找到你的那一种</div>
+        <div class="home-divider"></div>
+      </header>
+      <div class="section-title">八 种 情 境</div>
+      <div class="tribe-grid">
+        ${tribeCards}
+      </div>
+    </div>
+    ${renderNav('home')}
+  `;
+}
+
+// --- Tribe Detail ---
+function renderTribe(params) {
+  const tribe = getTribe(parseInt(params.id));
+  if (!tribe) return renderHome();
+
+  const hexagrams = getHexagramsByTribe(tribe.id);
+  const progress = getTribeProgress(tribe.id);
+
+  const guaItems = hexagrams.map(h => {
+    const isDone = h.status === 'done';
+    const yaoHtml = renderYaoMini(h);
+    return `
+      <div class="gua-item ${isDone ? 'done' : 'pending'}"
+           ${isDone ? `onclick="location.hash='#/gua/${h.num}'"` : ''}>
+        <div class="gua-yao-mini">${yaoHtml}</div>
+        <div class="gua-info">
+          <div class="gua-name-row">
+            <span class="gua-name">${h.name}</span>
+            <span class="gua-fullname">${h.fullName} · 第${String(h.num).padStart(2, '0')}卦</span>
+          </div>
+          <div class="gua-hook">${h.hook}</div>
+        </div>
+        ${isDone
+          ? `<span class="gua-arrow">›</span>`
+          : `<span class="gua-status">即将推出</span>`
+        }
+      </div>
+    `;
+  }).join('');
+
+  app.innerHTML = `
+    <div class="page">
+      <div class="tribe-header" style="--accent: ${tribe.color}">
+        <button class="back-btn" onclick="location.hash='#/'">‹ 返回</button>
+        <div class="tribe-detail-name" style="color: ${tribe.color}">${tribe.name}</div>
+        <div class="tribe-detail-question">${tribe.question}</div>
+        <div class="tribe-detail-energy">${tribe.energy} · ${progress.done}/${progress.total} 卦</div>
+      </div>
+      <div class="gua-list">
+        ${guaItems}
+      </div>
+    </div>
+    ${renderNav('home')}
+  `;
+}
+
+// --- Card Viewer (renders inline, not overlay) ---
+let previousHash = null;
+
+function renderViewer(params) {
+  const h = getHexagram(parseInt(params.num));
+  if (!h || h.status !== 'done') {
+    navigate('#/');
+    return;
+  }
+
+  const tribe = getTribe(h.tribe);
+
+  app.innerHTML = `
+    <div class="page" style="padding-bottom: 0;">
+      <div class="viewer-header">
+        <button class="viewer-close" id="viewer-back">‹ 返回</button>
+        <span class="viewer-title">${h.name} · ${h.fullName}</span>
+        <span style="width: 40px;"></span>
+      </div>
+      <div class="viewer-body" id="viewer-body">
+        <iframe src="/cards/${h.file}" title="${h.name} 卡片"></iframe>
+      </div>
+      <div class="viewer-info" style="text-align: center; padding: 16px 24px 24px;">
+        <div style="font-size: 11px; color: var(--dark); letter-spacing: 2px;">
+          「${tribe.name}」情境 · ${tribe.question}
+        </div>
+        <div style="font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 0.5px;">
+          ${h.hook}
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('viewer-back').addEventListener('click', () => {
+    history.back();
+  });
+}
+
+// --- Divination ---
+function renderDivine() {
+  app.innerHTML = `
+    <div class="page">
+      <div class="divine-container" id="divine-container">
+        <div class="divine-prompt">
+          <h2>静一静<br>想一个你正在面对的处境</h2>
+          <p>不需要说出来<br>感受到了，就可以开始</p>
+        </div>
+        <button class="divine-btn" id="divine-start">
+          照一照
+        </button>
+      </div>
+    </div>
+    ${renderNav('divine')}
+  `;
+
+  document.getElementById('divine-start').addEventListener('click', startDivination);
+}
+
+let divineAborted = false;
+
+async function startDivination() {
+  divineAborted = false;
+  const container = document.getElementById('divine-container');
+  const hexagram = getRandomHexagram();
+  const yao = getYaoLines(hexagram);
+  const tribe = getTribe(hexagram.tribe);
+
+  // Build stage
+  container.innerHTML = `
+    <div class="divine-stage">
+      <div class="divine-trigram-label" id="upper-label" style="margin-bottom: -8px">外卦 · ${hexagram.upper}</div>
+      <div class="divine-hexagram" id="divine-hexagram"></div>
+      <div class="divine-trigram-label" id="lower-label">内卦 · ${hexagram.lower}</div>
+      <div id="divine-result-area"></div>
+    </div>
+  `;
+
+  const hexContainer = document.getElementById('divine-hexagram');
+  if (!hexContainer) return;
+
+  // Build yao elements (display top to bottom = reverse of data)
+  const yaoReversed = [...yao].reverse();
+  const yaoLabels = ['上', '五', '四', '三', '二', '初'];
+  const upperEnergy = getTrigramEnergy(hexagram.upper);
+  const lowerEnergy = getTrigramEnergy(hexagram.lower);
+
+  // Create all yao elements
+  const yaoElements = [];
+  for (let i = 0; i < 6; i++) {
+    if (i === 3) {
+      const sep = document.createElement('div');
+      sep.className = 'divine-separator';
+      sep.id = 'divine-sep';
+      hexContainer.appendChild(sep);
+    }
+    const yaoDiv = document.createElement('div');
+    const isYang = yaoReversed[i] === 1;
+    const energy = i < 3 ? upperEnergy : lowerEnergy;
+    yaoDiv.className = `divine-yao ${isYang ? 'yang-line' : 'yin-line'} ${energy}`;
+    yaoDiv.innerHTML = `<span class="divine-yao-label">${yaoLabels[i]}</span>`;
+    hexContainer.appendChild(yaoDiv);
+    yaoElements.push(yaoDiv);
+  }
+
+  // Animate: reveal from bottom (last element) to top (first element)
+  const revealOrder = [...yaoElements].reverse();
+  for (let i = 0; i < revealOrder.length; i++) {
+    await sleep(600);
+    if (divineAborted) return;
+    revealOrder[i].classList.add('revealed');
+
+    if (i === 2) {
+      await sleep(300);
+      if (divineAborted) return;
+      const sep = document.getElementById('divine-sep');
+      const lbl = document.getElementById('lower-label');
+      if (sep) sep.classList.add('revealed');
+      if (lbl) lbl.classList.add('revealed');
+    }
+  }
+
+  await sleep(400);
+  if (divineAborted) return;
+  const upperLabel = document.getElementById('upper-label');
+  if (upperLabel) upperLabel.classList.add('revealed');
+
+  await sleep(800);
+  if (divineAborted) return;
+  const resultArea = document.getElementById('divine-result-area');
+  if (!resultArea) return;
+  const isDone = hexagram.status === 'done';
+
+  resultArea.innerHTML = `
+    <div class="divine-result">
+      <div class="divine-result-name">${hexagram.name}</div>
+      <div class="divine-result-fullname">${hexagram.fullName} · 第${String(hexagram.num).padStart(2, '0')}卦</div>
+      <div class="divine-result-hook">${hexagram.hook}</div>
+      <div class="divine-result-tribe" style="color: ${tribe.color}">「${tribe.name}」情境 · ${tribe.question}</div>
+      ${isDone
+        ? `<a href="#/gua/${hexagram.num}" class="divine-view-btn">查看三张卡 ›</a>`
+        : `<div style="font-size: 12px; color: var(--dark); letter-spacing: 1px;">内容即将推出</div>`
+      }
+      <button class="divine-retry-btn" id="divine-retry">再来一次</button>
+    </div>
+  `;
+
+  document.getElementById('divine-retry').addEventListener('click', () => {
+    renderDivine();
+  });
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// --- List Page ---
+function renderList() {
+  const allHexagrams = getAllHexagramsSorted();
+
+  app.innerHTML = `
+    <div class="page">
+      <div class="list-header">
+        <div class="list-title">六十四卦</div>
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input class="search-input" id="search-input" type="text" placeholder="搜索卦名、拼音或关键词..." />
+        </div>
+      </div>
+      <div class="list-count" id="list-count">共 64 卦 · 已完成 ${allHexagrams.filter(h => h.status === 'done').length} 卦</div>
+      <div class="list-items" id="list-items">
+        ${renderListItems(allHexagrams)}
+      </div>
+    </div>
+    ${renderNav('list')}
+  `;
+
+  const input = document.getElementById('search-input');
+  let debounceTimer;
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const results = searchHexagrams(input.value);
+      document.getElementById('list-items').innerHTML = renderListItems(results);
+      document.getElementById('list-count').textContent =
+        input.value.trim()
+          ? `找到 ${results.length} 卦`
+          : `共 64 卦 · 已完成 ${allHexagrams.filter(h => h.status === 'done').length} 卦`;
+    }, 200);
+  });
+}
+
+function renderListItems(hexagrams) {
+  return hexagrams.map(h => {
+    const tribe = getTribe(h.tribe);
+    const isDone = h.status === 'done';
+    return `
+      <div class="list-gua ${isDone ? '' : 'pending'}"
+           ${isDone ? `onclick="location.hash='#/gua/${h.num}'"` : ''}>
+        <span class="list-gua-num">${String(h.num).padStart(2, '0')}</span>
+        <span class="list-gua-name">${h.name}</span>
+        <span class="list-gua-full">${h.fullName}</span>
+        <span class="list-gua-tribe" style="color: ${tribe.color}; border-color: ${tribe.color}40">${tribe.name}</span>
+        <span class="list-gua-hook">${h.hook}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// --- About Page ---
+function renderAbout() {
+  app.innerHTML = `
+    <div class="page">
+      <div class="about-container">
+        <div class="about-brand">易经 · 情境识别</div>
+        <div class="about-tagline">不是算命，不是国学辞典，不是吉凶占卜</div>
+
+        <div class="about-section">
+          <div class="about-section-title">这 是 什 么</div>
+          <p>64卦是一套情境识别系统。</p>
+          <p>语录库告诉你「应该怎样」，情境系统告诉你「<em>你现在在哪里</em>」——这个位置的内在逻辑是什么，能量会向哪个方向走。</p>
+          <p>我们用 8 种情境分类（蓄积、扩张、受阻、收敛、转折、重构、连接、校准），把 64 种处境翻译成现代语言。每一卦三张卡，帮你识别当前处境，理解它的结构，找到应对方向。</p>
+        </div>
+
+        <div class="about-section">
+          <div class="about-section-title">核 心 差 异</div>
+          <p><em>8 族情境分类</em>——市面上没有的分类方式。按能量的方向和状态，把 64 卦组织成 8 种可识别的处境。</p>
+          <p><em>三张卡可视化表达</em>——不是古文堆砌。用现代情境语言，配合能量结构图解。</p>
+          <p><em>探索者姿态</em>——不做权威，做思维工具。所有解读是参考，不是定论。</p>
+        </div>
+
+        <div class="about-section">
+          <div class="about-section-title">关 于 作 者</div>
+          <p>@ 野野野在游戏人间</p>
+          <p>用思维模型和能量模型的视角，重新理解易经。每一卦都是真实的思考过程，不是搬运。</p>
+          <div class="about-link" id="wechat-link">
+            <span class="about-link-icon">💬</span>
+            <div class="about-link-text">
+              <div class="about-link-title">公众号 · 野野野在游戏人间</div>
+              <div class="about-link-desc">关注获取更新 · 后续小程序入口</div>
+            </div>
+            <span style="color: var(--faint)">›</span>
+          </div>
+        </div>
+
+        <div class="about-footer">
+          <p>探索者姿态 · 不做权威</p>
+          <p style="margin-top: 4px; color: var(--faint)">2026 · 持续更新中</p>
+        </div>
+      </div>
+    </div>
+    ${renderNav('about')}
+  `;
+}
+
+// ============================================
+// Route Definitions
+// ============================================
+route('/', renderHome);
+route('/tribe/:id', renderTribe);
+route('/gua/:num', renderViewer);
+route('/divine', renderDivine);
+route('/list', renderList);
+route('/about', renderAbout);
+
+// ============================================
+// Init
+// ============================================
+function handleRoute() {
+  divineAborted = true; // cancel any running divination animation
+  const hash = window.location.hash || '#/';
+  const { handler, params } = matchRoute(hash);
+  handler(params);
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener('hashchange', handleRoute);
+window.addEventListener('load', handleRoute);

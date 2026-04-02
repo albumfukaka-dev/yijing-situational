@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>临·19</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a18; display: flex; flex-direction: column; align-items: center; gap: 48px; padding: 48px 20px; min-height: 100vh; }
+.page-label { font-family: "PingFang SC", sans-serif; font-size: 10px; color: #444; letter-spacing: 2px; text-align: center; margin-bottom: 6px; }
+.card { width: 540px; height: 720px; background: #0a0a09; position: relative; overflow: hidden; flex-shrink: 0; border: 0.5px solid #222; }
+.card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 4px), repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(255,255,255,0.004) 7px, rgba(255,255,255,0.004) 8px); pointer-events: none; z-index: 1; }
+.inner { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; }
+.song { font-family: "Songti SC", "Noto Serif CJK SC", "SimSun", serif; }
+.ping { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+:root { --warm: #c9a96e; --warm-dim: #6b5a30; --cold: #6a8a9a; --cold-dim: #3a5a68; --light: #e8e0d4; --mid: #9e9588; --muted: #555; --dark: #444; --faint: #333; --line: #2a2a28; }
+.brand { font-size: 10px; color: var(--faint); letter-spacing: 2px; }
+
+/* COVER */
+.cover .inner { padding: 44px 44px 36px; justify-content: space-between; }
+.cover::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgba(106,138,154,0.06) 0%, transparent 55%); pointer-events: none; z-index: 1; }
+.cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.cover-tag { font-size: 10px; letter-spacing: 3px; color: var(--muted); border: 0.5px solid var(--line); padding: 4px 10px; }
+.cover-num { font-size: 11px; letter-spacing: 1.5px; color: var(--dark); }
+.cover-center { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.cover-title-row { display: flex; align-items: baseline; gap: 16px; }
+.cover-title { font-size: 52px; color: var(--light); letter-spacing: 14px; font-weight: 400; margin-left: 14px; }
+.cover-subtitle { font-size: 12px; color: var(--dark); letter-spacing: 2px; }
+.hook-main { font-size: 18px; color: var(--light); letter-spacing: 1.5px; line-height: 2.1; margin-bottom: 14px; }
+.hook-main em { font-style: normal; color: var(--cold); }
+.hook-flip { font-size: 14.5px; color: #aaa; letter-spacing: 0.5px; line-height: 2; }
+.hook-flip .key { color: var(--cold); font-style: normal; }
+.cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.series-tag { font-size: 9px; color: #3a3a38; letter-spacing: 2px; }
+
+/* CARD 2 */
+.insight .inner { padding: 44px 44px 36px; justify-content: space-between; }
+.card2-header { display: flex; align-items: baseline; gap: 12px; }
+.card2-title { font-size: 20px; color: var(--light); letter-spacing: 3px; }
+.card2-badge { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+.section-label { font-size: 10px; color: var(--cold); letter-spacing: 5px; margin-bottom: 8px; margin-top: 16px; }
+.section-body { font-size: 14px; color: #bbb0a3; line-height: 1.95; letter-spacing: 0.5px; }
+.section-body em { color: #d4cabb; font-style: normal; }
+.section-body .key { color: var(--cold); font-style: normal; }
+.divider { width: 24px; height: 0.5px; background: var(--line); margin: 10px 0; }
+.pullquote { border-left: 1.5px solid var(--cold); padding-left: 14px; margin-top: 10px; }
+.pullquote p { font-size: 14px; color: var(--cold); letter-spacing: 1px; line-height: 2; }
+
+/* CARD 3 */
+.diagram .inner { padding: 40px 36px 36px; justify-content: space-between; align-items: center; }
+.diagram-title { font-size: 12px; color: var(--muted); letter-spacing: 4px; text-align: center; }
+.diagram-body { width: 100%; }
+.diagram-insight { font-size: 14px; color: #bbb0a3; line-height: 2.1; letter-spacing: 0.5px; text-align: left; padding: 0 12px; }
+.diagram-insight em { color: #d4cabb; font-style: normal; }
+.diagram-insight .key { color: var(--cold); }
+</style>
+</head>
+<body>
+
+<!-- ===== CARD 1: COVER ===== -->
+<div class="page-label ping">CARD 1 · 封面</div>
+<div class="card cover">
+  <div class="inner">
+    <div class="cover-top">
+      <span class="ping cover-tag">扩 张</span>
+      <span class="ping cover-num">第 19 卦</span>
+    </div>
+    <div class="cover-center">
+      <div class="cover-title-row">
+        <span class="song cover-title">临</span>
+        <span class="ping cover-subtitle">地泽临</span>
+      </div>
+      <div>
+        <svg viewBox="0 0 240 204" width="220">
+          <defs>
+            <radialGradient id="cg_lin" cx="50%" cy="55%" r="42%">
+              <stop offset="0%" stop-color="#6a8a9a" stop-opacity="0.07"/>
+              <stop offset="100%" stop-color="#6a8a9a" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="240" height="204" fill="url(#cg_lin)"/>
+          <!-- 上卦：坤 · 地  阴阴阴（外卦），画时从上往下：爻6 爻5 爻4 -->
+          <text x="120" y="13" text-anchor="middle" fill="#3a5a68" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="3">坤 · 地</text>
+          <!-- 爻6 阴 -->
+          <line x1="32" y1="34" x2="108" y2="34" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="34" x2="208" y2="34" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <!-- 爻5 阴 -->
+          <line x1="32" y1="60" x2="108" y2="60" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="60" x2="208" y2="60" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <!-- 爻4 阴 -->
+          <line x1="32" y1="86" x2="108" y2="86" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="86" x2="208" y2="86" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+
+          <line x1="50" y1="108" x2="190" y2="108" stroke="#1e1e1c" stroke-width="0.5" stroke-dasharray="2,5"/>
+
+          <!-- 下卦：兑 · 泽  阳阳阴（内卦），画时从上往下：爻3阴 爻2阳 爻1阳 -->
+          <text x="120" y="202" text-anchor="middle" fill="#3a5a68" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="3">兑 · 泽</text>
+          <!-- 爻3 阴 -->
+          <line x1="32" y1="130" x2="108" y2="130" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <line x1="132" y1="130" x2="208" y2="130" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <!-- 爻2 阳 -->
+          <line x1="32" y1="156" x2="208" y2="156" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+          <!-- 爻1 阳 -->
+          <line x1="32" y1="182" x2="208" y2="182" stroke="#6a8a9a" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div style="padding: 0 4px;">
+      <div class="song hook-main">
+        路在开，人在来。<br>
+        <em>有什么正往你这里汇聚。</em>
+      </div>
+      <div class="song hook-flip">
+        临，是你站在这个汇聚里，<br>
+        与它面对面相向。<br>
+        <span class="key">感受还在，才能临在。</span>
+      </div>
+    </div>
+    <div class="cover-bottom">
+      <span class="ping brand">@野野野在游戏人间</span>
+      <span class="ping series-tag">易经 · 情境识别</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CARD 2: INSIGHT + ACTION ===== -->
+<div class="page-label ping">CARD 2 · 洞见与行动</div>
+<div class="card insight">
+  <div class="inner">
+    <div class="card2-header">
+      <span class="song card2-title">临 · 19</span>
+      <span class="ping card2-badge">地泽临</span>
+    </div>
+    <div>
+      <div class="ping section-label">这 个 卦 在 说 什 么</div>
+      <div class="song section-body">
+        坤在外，环境在接纳——<br>
+        你的表达、付出，外界看得见，也有回应。<br>
+        兑在内，心生喜悦，内有微微的凝聚感。<br><br>
+        「刚浸而长」——<br>
+        不是涌现，是浸润。<br>
+        正在浸润的，正在生长。<br><br>
+        <span class="key">这是扩张期里最柔软的一种。</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="ping section-label">怎 么 做</div>
+      <div class="song section-body">
+        象传说「教思无穷，容保民无疆」。<br>
+        去感知，去承接，不设限。<br><br>
+        汹涌的时候，人只能反应；<br>
+        徐徐流动的时候，才能真正看见。<br><br>
+        <span class="key">不刻意。清醒着，自由着。</span>
+      </div>
+    </div>
+    <div style="margin-top:auto;">
+      <span class="ping brand">@野野野在游戏人间</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CARD 3: ENERGY DIAGRAM ===== -->
+<div class="page-label ping">CARD 3 · 能量图解</div>
+<div class="card diagram">
+  <div class="inner">
+    <div>
+      <span class="ping diagram-title">临 · 能 量 结 构</span>
+    </div>
+    <div class="diagram-body">
+      <svg viewBox="0 0 460 340" width="460" style="display:block; margin:0 auto;">
+        <defs>
+          <radialGradient id="g3_lin_cold_top" cx="50%" cy="20%" r="35%">
+            <stop offset="0%" stop-color="#6a8a9a" stop-opacity="0.07"/>
+            <stop offset="100%" stop-color="#6a8a9a" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="g3_lin_cold_bot" cx="50%" cy="80%" r="35%">
+            <stop offset="0%" stop-color="#6a8a9a" stop-opacity="0.05"/>
+            <stop offset="100%" stop-color="#6a8a9a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="0" y="20" width="460" height="140" fill="url(#g3_lin_cold_top)"/>
+        <rect x="0" y="175" width="460" height="155" fill="url(#g3_lin_cold_bot)"/>
+
+        <!-- UPPER: 坤·地 (外卦) cold blue -->
+        <text x="230" y="18" text-anchor="middle" fill="#3a5a68" font-size="10" font-family="PingFang SC, sans-serif" letter-spacing="4">外 卦 · 坤 · 地</text>
+        <rect x="90" y="30" width="280" height="110" rx="2" fill="none" stroke="#3a5a68" stroke-width="0.5" stroke-dasharray="3,4"/>
+        <!-- 坤 三爻 全阴 -->
+        <line x1="168" y1="56" x2="215" y2="56" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="56" x2="289" y2="56" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="168" y1="81" x2="215" y2="81" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="81" x2="289" y2="81" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="168" y1="106" x2="215" y2="106" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="106" x2="289" y2="106" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <!-- 坤 内部能量：容纳，柔性承接 -->
+        <line x1="128" y1="112" x2="128" y2="136" stroke="#6a8a9a" stroke-width="0.6" opacity="0.35"/>
+        <path d="M125 132 L128 139 L131 132" fill="none" stroke="#6a8a9a" stroke-width="0.6" opacity="0.35"/>
+        <line x1="332" y1="112" x2="332" y2="136" stroke="#6a8a9a" stroke-width="0.6" opacity="0.35"/>
+        <path d="M329 132 L332 139 L335 132" fill="none" stroke="#6a8a9a" stroke-width="0.6" opacity="0.35"/>
+        <text x="354" y="76" text-anchor="middle" fill="#3a5a68" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">完全接纳</text>
+        <text x="108" y="76" text-anchor="middle" fill="#3a5a68" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">不设门槛</text>
+
+        <!-- 中间分隔线 -->
+        <line x1="70" y1="166" x2="390" y2="166" stroke="#2a2825" stroke-width="0.5" stroke-dasharray="1.5,6"/>
+        <text x="405" y="169" fill="#333" font-size="9" font-family="PingFang SC, sans-serif">临</text>
+
+        <!-- 兑 内部能量：汇聚，两边朝中间 → ← -->
+        <line x1="108" y1="245" x2="160" y2="245" stroke="#6a8a9a" stroke-width="0.5" opacity="0.5"/>
+        <path d="M155 242 L162 245 L155 248" fill="none" stroke="#6a8a9a" stroke-width="0.5" opacity="0.5"/>
+        <line x1="352" y1="245" x2="300" y2="245" stroke="#6a8a9a" stroke-width="0.5" opacity="0.5"/>
+        <path d="M305 242 L298 245 L305 248" fill="none" stroke="#6a8a9a" stroke-width="0.5" opacity="0.5"/>
+
+        <!-- LOWER: 兑·泽 (内卦) cold -->
+        <rect x="90" y="186" width="280" height="110" rx="2" fill="none" stroke="#3a5a68" stroke-width="0.5" stroke-dasharray="3,4"/>
+        <!-- 兑 三爻：阴 阳 阳（从上往下画：上爻阴 中爻阳 初爻阳）-->
+        <!-- 上爻 阴 -->
+        <line x1="168" y1="212" x2="215" y2="212" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="212" x2="289" y2="212" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <!-- 中爻 阳 -->
+        <line x1="168" y1="238" x2="289" y2="238" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <!-- 初爻 阳 -->
+        <line x1="168" y1="264" x2="289" y2="264" stroke="#6a8a9a" stroke-width="3" stroke-linecap="round"/>
+        <text x="354" y="248" text-anchor="middle" fill="#3a5a68" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">开口汇聚</text>
+        <text x="108" y="238" text-anchor="middle" fill="#3a5a68" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="3">内悦开放</text>
+
+        <text x="230" y="316" text-anchor="middle" fill="#3a5a68" font-size="10" font-family="PingFang SC, sans-serif" letter-spacing="4">内 卦 · 兑 · 泽</text>
+        <text x="230" y="338" text-anchor="middle" fill="#555" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="2">兑悦开放汇聚 × 坤广阔承接 → 不刻意，反而通透</text>
+      </svg>
+    </div>
+    <div>
+      <div class="song diagram-insight">
+        兑在下，面对，稳定而开放；<br>
+        坤在上，广阔，全然承接。<br><br>
+        <em>趋势在身边，心流在里面。</em><br>
+        <span class="key">觉知微风，才是临境。</span>
+      </div>
+      <div style="margin-top:12px;">
+        <span class="ping brand">@野野野在游戏人间</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
