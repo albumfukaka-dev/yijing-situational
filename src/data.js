@@ -1,7 +1,7 @@
 // 八卦三爻映射（从下往上）
 const TRIGRAM_LINES = {
-  '乾': [1,1,1], '坤': [0,0,0], '震': [0,0,1], '巽': [0,1,1],
-  '坎': [0,1,0], '离': [1,0,1], '艮': [1,0,0], '兑': [1,1,0]
+  '乾': [1,1,1], '坤': [0,0,0], '震': [1,0,0], '巽': [0,1,1],
+  '坎': [0,1,0], '离': [1,0,1], '艮': [0,0,1], '兑': [1,1,0]
 };
 
 // 八卦能量属性（阳性=暖金，阴性=冷蓝）
@@ -55,7 +55,7 @@ export const HEXAGRAMS = [
   { num: 12, name: '否', pinyin: 'pǐ', fullName: '天地否', upper: '乾', lower: '坤', tribe: 3, status: 'done', file: 'pi_12_v1.html', hook: '天地否，是在提醒你找回弄丢的自己' },
   { num: 29, name: '坎', pinyin: 'kǎn', fullName: '坎为水', upper: '坎', lower: '坎', tribe: 3, status: 'done', file: 'kan_29_v1.html', hook: '允许一切发生' },
   { num: 36, name: '明夷', pinyin: 'míng yí', fullName: '地火明夷', upper: '坤', lower: '离', tribe: 3, status: 'done', file: 'mingyi_v3.html', hook: '越证明自己对，消耗越大' },
-  { num: 39, name: '蹇', pinyin: 'jiǎn', fullName: '水山蹇', upper: '坎', lower: '艮', tribe: 3, status: 'done', file: 'jian_39_v1.html', hook: '走不动的时候，先看脚下' },
+  { num: 39, name: '蹇', pinyin: 'jiǎn', fullName: '水山蹇', upper: '坎', lower: '艮', tribe: 3, status: 'done', file: 'jian_39_v1.html', hook: '冬天的树也在长根' },
   { num: 40, name: '解', pinyin: 'jiě', fullName: '雷水解', upper: '震', lower: '坎', tribe: 3, status: 'pending', file: null, hook: '松绑的那一刻' },
   { num: 47, name: '困', pinyin: 'kùn', fullName: '泽水困', upper: '兑', lower: '坎', tribe: 3, status: 'pending', file: null, hook: '困住的是形式，不是你' },
   { num: 51, name: '震', pinyin: 'zhèn', fullName: '震为雷', upper: '震', lower: '震', tribe: 3, status: 'pending', file: null, hook: '惊到了，而后知有序' },
