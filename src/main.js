@@ -487,7 +487,6 @@ function renderExplore(params) {
           <div class="relation-info">
             <div class="relation-name">${r.name}<span class="relation-fullname"> · ${r.fullName}</span></div>
             <div class="relation-hook">${getZaGuaDef(r.num) || ''}</div>
-            <div class="relation-tribe" style="color: ${rTribe.color}">「${rTribe.name}」· ${rTribe.question}</div>
           </div>
           <span class="relation-arrow">›</span>
         </div>
