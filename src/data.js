@@ -56,8 +56,8 @@ export const HEXAGRAMS = [
   { num: 29, name: '坎', pinyin: 'kǎn', fullName: '坎为水', upper: '坎', lower: '坎', tribe: 3, status: 'done', file: 'kan_29_v1.html', hook: '允许一切发生' },
   { num: 36, name: '明夷', pinyin: 'míng yí', fullName: '地火明夷', upper: '坤', lower: '离', tribe: 3, status: 'done', file: 'mingyi_v3.html', hook: '越证明自己对，消耗越大' },
   { num: 39, name: '蹇', pinyin: 'jiǎn', fullName: '水山蹇', upper: '坎', lower: '艮', tribe: 3, status: 'done', file: 'jian_39_v1.html', hook: '冬天的树也在长根' },
-  { num: 40, name: '解', pinyin: 'jiě', fullName: '雷水解', upper: '震', lower: '坎', tribe: 3, status: 'pending', file: null, hook: '松绑的那一刻' },
-  { num: 47, name: '困', pinyin: 'kùn', fullName: '泽水困', upper: '兑', lower: '坎', tribe: 3, status: 'pending', file: null, hook: '困住的是形式，不是你' },
+  { num: 40, name: '解', pinyin: 'jiě', fullName: '雷水解', upper: '震', lower: '坎', tribe: 3, status: 'done', file: 'jie_40_v1.html', hook: '松绑的那一刻' },
+  { num: 47, name: '困', pinyin: 'kùn', fullName: '泽水困', upper: '兑', lower: '坎', tribe: 3, status: 'done', file: 'kun_47_v1.html', hook: '困住的是形式，不是你' },
   { num: 51, name: '震', pinyin: 'zhèn', fullName: '震为雷', upper: '震', lower: '震', tribe: 3, status: 'pending', file: null, hook: '惊到了，而后知有序' },
 
   // ④ 重构族 (8卦)
@@ -161,4 +161,187 @@ export function searchHexagrams(query) {
 // 按传统序号排序的64卦
 export function getAllHexagramsSorted() {
   return [...HEXAGRAMS].sort((a, b) => a.num - b.num);
+}
+
+// ============================================
+// 综卦·错卦·互卦 计算
+// ============================================
+
+// 反向查找：从三爻数组找到卦名
+const TRIGRAM_REVERSE = {};
+for (const [name, lines] of Object.entries(TRIGRAM_LINES)) {
+  TRIGRAM_REVERSE[lines.join('')] = name;
+}
+
+// 从六爻数组找到对应的卦
+function findHexagramByLines(sixLines) {
+  const lowerKey = sixLines.slice(0, 3).join('');
+  const upperKey = sixLines.slice(3, 6).join('');
+  const lowerName = TRIGRAM_REVERSE[lowerKey];
+  const upperName = TRIGRAM_REVERSE[upperKey];
+  if (!lowerName || !upperName) return null;
+  return HEXAGRAMS.find(h => h.lower === lowerName && h.upper === upperName) || null;
+}
+
+// 综卦：上下翻转（整个六爻倒序）
+export function getZongGua(hexagram) {
+  const yao = getYaoLines(hexagram);
+  const reversed = [...yao].reverse();
+  const result = findHexagramByLines(reversed);
+  const isSelf = result && result.num === hexagram.num;
+  return { hexagram: result, isSelf, label: '综卦', desc: '翻转视角 · 同一处境的另一面' };
+}
+
+// 错卦：每爻取反（阴阳互换）
+export function getCuoGua(hexagram) {
+  const yao = getYaoLines(hexagram);
+  const inverted = yao.map(y => y === 1 ? 0 : 1);
+  const result = findHexagramByLines(inverted);
+  const isSelf = result && result.num === hexagram.num;
+  return { hexagram: result, isSelf, label: '错卦', desc: '阴阳相反 · 你的盲区与影子' };
+}
+
+// 互卦：2-3-4爻做下卦，3-4-5爻做上卦
+export function getHuGua(hexagram) {
+  const yao = getYaoLines(hexagram); // [初, 二, 三, 四, 五, 上] 0-indexed
+  const huLines = [yao[1], yao[2], yao[3], yao[2], yao[3], yao[4]];
+  const result = findHexagramByLines(huLines);
+  const isSelf = result && result.num === hexagram.num;
+  return { hexagram: result, isSelf, label: '互卦', desc: '中爻重组 · 隐藏的内在动态' };
+}
+
+// ============================================
+// 杂卦传定义（一句话精义）
+// ============================================
+const ZA_GUA = {
+  1: '刚', 2: '柔', 3: '见而不失其居', 4: '杂而著',
+  5: '不进也', 6: '不亲也', 7: '忧', 8: '乐',
+  9: '寡也', 10: '不处也', 11: '通也', 12: '否之匪人',
+  13: '亲也', 14: '众也', 15: '轻也', 16: '怠也',
+  17: '无故也', 18: '饭也', 19: '与也', 20: '求也',
+  21: '食也', 22: '无色也', 23: '烂也', 24: '反也',
+  25: '灾也', 26: '时也', 27: '养正也', 28: '颠也',
+  29: '险也', 30: '丽也', 31: '速也', 32: '久也',
+  33: '退也', 34: '则止', 35: '昔也', 36: '诛也',
+  37: '内也', 38: '外也', 39: '难也', 40: '缓也',
+  41: '衰之始', 42: '盛之始', 43: '决也', 44: '遇也',
+  45: '聚也', 46: '不来也', 47: '相遇也', 48: '通也',
+  49: '去故也', 50: '取新也', 51: '起也', 52: '止也',
+  53: '女归待男行', 54: '女之终也', 55: '多故也', 56: '亲寡',
+  57: '伏也', 58: '见也', 59: '离也', 60: '止也',
+  61: '信也', 62: '过也', 63: '定也', 64: '男之穷也'
+};
+
+export function getZaGuaDef(num) {
+  return ZA_GUA[num] ? `「${ZA_GUA[num]}」` : null;
+}
+
+// ============================================
+// 京房八宫
+// ============================================
+const PALACES = [
+  { name: '乾宫', base: 1,  members: [1, 44, 33, 12, 20, 23, 35, 14] },
+  { name: '坎宫', base: 29, members: [29, 60, 3, 63, 49, 55, 36, 7] },
+  { name: '艮宫', base: 52, members: [52, 22, 26, 41, 38, 10, 61, 53] },
+  { name: '震宫', base: 51, members: [51, 16, 40, 32, 46, 48, 28, 17] },
+  { name: '巽宫', base: 57, members: [57, 9, 37, 42, 25, 21, 27, 18] },
+  { name: '离宫', base: 30, members: [30, 56, 50, 64, 4, 59, 6, 13] },
+  { name: '坤宫', base: 2,  members: [2, 24, 19, 11, 34, 43, 5, 8] },
+  { name: '兑宫', base: 58, members: [58, 47, 45, 31, 39, 15, 62, 54] },
+];
+
+const PALACE_ROLES = ['本宫卦', '一世卦', '二世卦', '三世卦', '四世卦', '五世卦', '游魂卦', '归魂卦'];
+
+export function getPalace(hexagramNum) {
+  for (const palace of PALACES) {
+    const idx = palace.members.indexOf(hexagramNum);
+    if (idx !== -1) {
+      return {
+        name: palace.name,
+        baseNum: palace.base,
+        role: PALACE_ROLES[idx],
+        members: palace.members,
+        index: idx
+      };
+    }
+  }
+  return null;
+}
+
+// ============================================
+// 序卦传（前后卦脉络）
+// ============================================
+const XU_GUA = {
+  2: '有天地然后万物生焉',
+  3: '盈天地之间者唯万物',
+  4: '物生必蒙',
+  5: '蒙者物之稚也，物稚不可不养',
+  6: '饮食必有讼',
+  7: '讼必有众起',
+  8: '众必有所比',
+  9: '比必有所畜',
+  10: '物畜然后有礼',
+  11: '履而泰',
+  12: '泰者通也，物不可以终通',
+  13: '物不可以终否',
+  14: '与人同者物必归焉',
+  15: '有大者不可以盈',
+  16: '有大而能谦必豫',
+  17: '豫必有随',
+  18: '以喜随人者必有事',
+  19: '蛇然后可大',
+  20: '物大然后可观',
+  21: '可观而后有所合',
+  22: '物不可以苟合而已',
+  23: '贲穷则反',
+  24: '物不可以终尽，剥穷上反下',
+  25: '复则不妄',
+  26: '有无妄然后可畜',
+  27: '物畜然后可养',
+  28: '不养则不可动',
+  29: '物不可以终过',
+  30: '陷必有所丽',
+  31: '有天地然后有万物，有万物然后有男女',
+  32: '夫妇之道不可以不久',
+  33: '物不可以久居其所',
+  34: '物不可以终遁',
+  35: '物不可以终壮',
+  36: '进必有所伤',
+  37: '伤乎外者必反乎家',
+  38: '家道穷必乖',
+  39: '乖必有难',
+  40: '物不可以终难',
+  41: '解者缓也，缓必有所失',
+  42: '损而不已必益',
+  43: '益而不已必决',
+  44: '决必有所遇',
+  45: '妖之相遇后聚',
+  46: '聚而上者谓之升',
+  47: '升而不已必困',
+  48: '困乎上者必反下',
+  49: '井道不可不革',
+  50: '革物者莫若鼎',
+  51: '主器者莫若长子',
+  52: '物不可以终动',
+  53: '物不可以终止',
+  54: '进必有所归',
+  55: '得其所归者必大',
+  56: '穷大者必失其居',
+  57: '旅而无所容',
+  58: '入而后说之',
+  59: '说而后散之',
+  60: '物不可以终离',
+  61: '节而信之',
+  62: '有其信者必行之',
+  63: '有过物者必济',
+  64: '物不可穷也'
+};
+
+export function getSequenceContext(hexagramNum) {
+  const prevNum = hexagramNum > 1 ? hexagramNum - 1 : null;
+  const nextNum = hexagramNum < 64 ? hexagramNum + 1 : null;
+  return {
+    prev: prevNum ? { hexagram: getHexagram(prevNum), xuGuaText: XU_GUA[hexagramNum] || null } : null,
+    next: nextNum ? { hexagram: getHexagram(nextNum), xuGuaText: XU_GUA[nextNum] || null } : null,
+  };
 }

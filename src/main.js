@@ -3,7 +3,9 @@ import {
   TRIBES, HEXAGRAMS,
   getHexagramsByTribe, getTribe, getHexagram, getTribeProgress,
   getRandomHexagram, searchHexagrams, getAllHexagramsSorted, getYaoLines,
-  getTrigramEnergy
+  getTrigramEnergy,
+  getZongGua, getCuoGua, getHuGua,
+  getZaGuaDef, getPalace, getSequenceContext
 } from './data.js';
 
 // ============================================
@@ -59,7 +61,7 @@ function renderNav(active = '') {
     { id: 'home', icon: '☰', label: '情境', hash: '#/' },
     { id: 'divine', icon: '◎', label: '抽卦', hash: '#/divine' },
     { id: 'list', icon: '≡', label: '索引', hash: '#/list' },
-    { id: 'about', icon: '◇', label: '关于', hash: '#/about' },
+    { id: 'explore-nav', icon: '◈', label: '探索', hash: '#/explore' },
   ];
   return `
     <nav class="bottom-nav">
@@ -376,19 +378,218 @@ function renderListItems(hexagrams) {
     const tribe = getTribe(h.tribe);
     const isDone = h.status === 'done';
     return `
-      <div class="list-gua ${isDone ? '' : 'pending'}"
-           ${isDone ? `onclick="location.hash='#/gua/${h.num}'"` : ''}>
-        <span class="list-gua-num">${String(h.num).padStart(2, '0')}</span>
-        <span class="list-gua-name">${h.name}</span>
-        <span class="list-gua-full">${h.fullName}</span>
-        <span class="list-gua-tribe" style="color: ${tribe.color}; border-color: ${tribe.color}40">${tribe.name}</span>
-        <span class="list-gua-hook">${h.hook}</span>
+      <div class="list-gua ${isDone ? '' : 'pending'}">
+        <div class="list-gua-main" ${isDone ? `onclick="location.hash='#/gua/${h.num}'"` : ''}>
+          <span class="list-gua-num">${String(h.num).padStart(2, '0')}</span>
+          <span class="list-gua-name">${h.name}</span>
+          <span class="list-gua-full">${h.fullName}</span>
+          <span class="list-gua-tribe" style="color: ${tribe.color}; border-color: ${tribe.color}40">${tribe.name}</span>
+          <span class="list-gua-hook">${h.hook}</span>
+        </div>
+        <span class="list-gua-explore" onclick="event.stopPropagation(); location.hash='#/explore/${h.num}'" title="探索关系卦">◈</span>
       </div>
     `;
   }).join('');
 }
 
-// --- About Page ---
+// --- Explore Index (pick a hexagram) ---
+function renderExploreIndex() {
+  const allHexagrams = getAllHexagramsSorted();
+
+  app.innerHTML = `
+    <div class="page">
+      <div class="explore-index-header">
+        <div class="explore-index-title">卦 象 探 索</div>
+        <div class="explore-index-sub">选择任意一卦，查看综卦·错卦·互卦关系</div>
+        <div class="search-box">
+          <span class="search-icon">⌕</span>
+          <input class="search-input" id="explore-search" type="text" placeholder="搜索卦名、拼音或序号..." />
+        </div>
+      </div>
+      <div class="explore-grid" id="explore-grid">
+        ${renderExploreGrid(allHexagrams)}
+      </div>
+    </div>
+    ${renderNav('explore-nav')}
+  `;
+
+  const input = document.getElementById('explore-search');
+  let debounceTimer;
+  input.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const results = searchHexagrams(input.value);
+      document.getElementById('explore-grid').innerHTML = renderExploreGrid(results);
+    }, 200);
+  });
+}
+
+function renderExploreGrid(hexagrams) {
+  return hexagrams.map(h => {
+    const tribe = getTribe(h.tribe);
+    return `
+      <div class="explore-pick" onclick="location.hash='#/explore/${h.num}'" style="--accent: ${tribe.color}">
+        <div class="explore-pick-num">${String(h.num).padStart(2, '0')}</div>
+        <div class="explore-pick-yao">${renderYaoMini(h)}</div>
+        <div class="explore-pick-name">${h.name}</div>
+        <div class="explore-pick-full">${h.fullName}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// --- Explore Detail (show relationships) ---
+function renderExplore(params) {
+  const h = getHexagram(parseInt(params.num));
+  if (!h) { navigate('#/explore'); return; }
+
+  const tribe = getTribe(h.tribe);
+  const zong = getZongGua(h);
+  const cuo = getCuoGua(h);
+  const hu = getHuGua(h);
+  const zaGuaDef = getZaGuaDef(h.num);
+  const seqCtx = getSequenceContext(h.num);
+  const palace = getPalace(h.num);
+
+  const relations = [zong, cuo, hu];
+
+  function renderRelationCard(rel) {
+    const r = rel.hexagram;
+    if (!r) return `<div class="relation-card empty"><div class="relation-label">${rel.label}</div><div class="relation-empty">无法计算</div></div>`;
+
+    const rTribe = getTribe(r.tribe);
+    const rYaoHtml = renderYaoMini(r);
+
+    if (rel.isSelf) {
+      return `
+        <div class="relation-card is-self">
+          <div class="relation-header">
+            <span class="relation-label">${rel.label}</span>
+            <span class="relation-desc">${rel.desc}</span>
+          </div>
+          <div class="relation-self-note">
+            <span class="relation-self-icon">◎</span>
+            本卦即${rel.label} — 结构对称
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="relation-card" onclick="location.hash='#/explore/${r.num}'">
+        <div class="relation-header">
+          <span class="relation-label">${rel.label}</span>
+          <span class="relation-desc">${rel.desc}</span>
+        </div>
+        <div class="relation-body">
+          <div class="relation-yao">${rYaoHtml}</div>
+          <div class="relation-info">
+            <div class="relation-name">${r.name}<span class="relation-fullname"> · ${r.fullName}</span></div>
+            <div class="relation-hook">${r.hook}</div>
+            <div class="relation-tribe" style="color: ${rTribe.color}">「${rTribe.name}」· ${rTribe.question}</div>
+          </div>
+          <span class="relation-arrow">›</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderSeqCard(data, direction) {
+    if (!data || !data.hexagram) return '';
+    const s = data.hexagram;
+    const sTribe = getTribe(s.tribe);
+    const arrow = direction === 'prev' ? '←' : '→';
+    const label = direction === 'prev' ? '前一卦' : '后一卦';
+    return `
+      <div class="seq-card" onclick="location.hash='#/explore/${s.num}'">
+        <div class="seq-direction">
+          <span class="seq-arrow">${arrow}</span>
+          <span class="seq-label">${label}</span>
+        </div>
+        <div class="seq-body">
+          <div class="seq-yao">${renderYaoMini(s)}</div>
+          <div class="seq-info">
+            <div class="seq-name">${s.name}<span class="seq-fullname"> · ${s.fullName} · 第${String(s.num).padStart(2,'0')}卦</span></div>
+            <div class="seq-hook">${s.hook}</div>
+          </div>
+          <span class="relation-arrow">›</span>
+        </div>
+        ${data.xuGuaText ? `<div class="seq-xugua">序卦传：${data.xuGuaText}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function renderPalaceSection() {
+    if (!palace) return '';
+    const baseH = getHexagram(palace.baseNum);
+    const memberCards = palace.members.map((num, idx) => {
+      const m = getHexagram(num);
+      if (!m) return '';
+      const isCurrent = m.num === h.num;
+      return `
+        <div class="palace-member ${isCurrent ? 'current' : ''}" onclick="${isCurrent ? '' : `location.hash='#/explore/${m.num}'`}">
+          <div class="palace-member-yao">${renderYaoMini(m)}</div>
+          <div class="palace-member-name">${m.name}</div>
+          <div class="palace-member-role">${['本宫','一世','二世','三世','四世','五世','游魂','归魂'][idx]}</div>
+        </div>
+      `;
+    }).join('');
+
+    return `
+      <div class="explore-section-title">归 宫</div>
+      <div class="palace-section">
+        <div class="palace-header">
+          <span class="palace-name">${palace.name}</span>
+          <span class="palace-role">本卦为${palace.role}</span>
+        </div>
+        <div class="palace-grid">
+          ${memberCards}
+        </div>
+      </div>
+    `;
+  }
+
+  app.innerHTML = `
+    <div class="page">
+      <div class="explore-header">
+        <button class="back-btn" onclick="location.hash='#/explore'">‹ 返回</button>
+        <span class="explore-header-title">卦象探索</span>
+        <span style="width: 40px"></span>
+      </div>
+
+      <div class="explore-hero">
+        <div class="explore-hero-yao">${renderYaoMini(h)}</div>
+        <div class="explore-hero-info">
+          <div class="explore-hero-name">${h.name}</div>
+          <div class="explore-hero-full">${h.fullName} · 第${String(h.num).padStart(2, '0')}卦</div>
+          <div class="explore-hero-tribe" style="color: ${tribe.color}">「${tribe.name}」· ${tribe.question}</div>
+          <div class="explore-hero-hook">${h.hook}</div>
+          ${zaGuaDef ? `<div class="explore-hero-zagua">杂卦传：${h.name}，${zaGuaDef}</div>` : ''}
+        </div>
+      </div>
+
+      ${h.status === 'done' ? `<a href="#/gua/${h.num}" class="explore-view-cards">查看三张卡 ›</a>` : ''}
+
+      <div class="explore-section-title">关 系 卦</div>
+
+      <div class="relation-list">
+        ${relations.map(r => renderRelationCard(r)).join('')}
+      </div>
+
+      <div class="explore-section-title">脉 络</div>
+
+      <div class="seq-list">
+        ${renderSeqCard(seqCtx.prev, 'prev')}
+        ${renderSeqCard(seqCtx.next, 'next')}
+      </div>
+
+      ${renderPalaceSection()}
+    </div>
+    ${renderNav('explore-nav')}
+  `;
+}
+
+
 function renderAbout() {
   app.innerHTML = `
     <div class="page">
@@ -442,6 +643,8 @@ route('/tribe/:id', renderTribe);
 route('/gua/:num', renderViewer);
 route('/divine', renderDivine);
 route('/list', renderList);
+route('/explore', renderExploreIndex);
+route('/explore/:num', renderExplore);
 route('/about', renderAbout);
 
 // ============================================
