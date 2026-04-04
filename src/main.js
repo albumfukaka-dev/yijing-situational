@@ -5,7 +5,7 @@ import {
   getRandomHexagram, searchHexagrams, getAllHexagramsSorted, getYaoLines,
   getTrigramEnergy,
   getZongGua, getCuoGua, getHuGua,
-  getZaGuaDef, getPalace, getSequenceContext
+  getZaGuaDef, getPalace, getSequenceContext, getGuaCi
 } from './data.js';
 
 // ============================================
@@ -448,6 +448,7 @@ function renderExplore(params) {
   const cuo = getCuoGua(h);
   const hu = getHuGua(h);
   const zaGuaDef = getZaGuaDef(h.num);
+  const guaCi = getGuaCi(h.num);
   const seqCtx = getSequenceContext(h.num);
   const palace = getPalace(h.num);
 
@@ -485,7 +486,7 @@ function renderExplore(params) {
           <div class="relation-yao">${rYaoHtml}</div>
           <div class="relation-info">
             <div class="relation-name">${r.name}<span class="relation-fullname"> · ${r.fullName}</span></div>
-            <div class="relation-hook">${r.hook}</div>
+            <div class="relation-hook">${getZaGuaDef(r.num) || ''}</div>
             <div class="relation-tribe" style="color: ${rTribe.color}">「${rTribe.name}」· ${rTribe.question}</div>
           </div>
           <span class="relation-arrow">›</span>
@@ -510,7 +511,7 @@ function renderExplore(params) {
           <div class="seq-yao">${renderYaoMini(s)}</div>
           <div class="seq-info">
             <div class="seq-name">${s.name}<span class="seq-fullname"> · ${s.fullName} · 第${String(s.num).padStart(2,'0')}卦</span></div>
-            <div class="seq-hook">${s.hook}</div>
+            <div class="seq-hook">${getZaGuaDef(s.num) || ''}</div>
           </div>
           <span class="relation-arrow">›</span>
         </div>
@@ -562,8 +563,7 @@ function renderExplore(params) {
         <div class="explore-hero-info">
           <div class="explore-hero-name">${h.name}</div>
           <div class="explore-hero-full">${h.fullName} · 第${String(h.num).padStart(2, '0')}卦</div>
-          <div class="explore-hero-tribe" style="color: ${tribe.color}">「${tribe.name}」· ${tribe.question}</div>
-          <div class="explore-hero-hook">${h.hook}</div>
+          ${guaCi ? `<div class="explore-hero-guaci">${h.name}卦：${guaCi}</div>` : ''}
           ${zaGuaDef ? `<div class="explore-hero-zagua">杂卦传：${h.name}，${zaGuaDef}</div>` : ''}
         </div>
       </div>
