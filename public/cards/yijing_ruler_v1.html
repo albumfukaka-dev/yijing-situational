@@ -15,13 +15,13 @@ body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK S
 .header .sub{font-size:10px;color:#555;letter-spacing:2px;margin-top:4px;}
 
 /* Picker area */
-.picker-area{display:flex;gap:16px;padding:8px 20px;max-width:680px;width:100%;}
+.picker-area{display:flex;gap:8px;padding:8px 10px;max-width:680px;width:100%;}
 .picker-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
 .picker-label{font-size:9px;letter-spacing:3px;margin-bottom:2px;}
 .picker-label.warm{color:#c9a96e;}
 .picker-label.cold{color:#6a8a9a;}
 
-.tri-btn{width:100%;background:#111110;border:1px solid #1e1e1c;color:#777;font-size:11px;padding:5px 8px;cursor:pointer;border-radius:4px;transition:all .3s;display:flex;align-items:center;gap:8px;letter-spacing:.5px;}
+.tri-btn{width:100%;background:#111110;border:1px solid #1e1e1c;color:#777;font-size:10px;padding:4px 6px;cursor:pointer;border-radius:4px;transition:all .3s;display:flex;align-items:center;gap:6px;letter-spacing:.5px;}
 .tri-btn:hover{border-color:#444;color:#bbb;background:#161614;}
 .tri-btn.sel-warm{border-color:#c9a96e;color:#c9a96e;background:#14120e;box-shadow:0 0 10px rgba(201,169,110,.08);}
 .tri-btn.sel-cold{border-color:#6a8a9a;color:#6a8a9a;background:#0e1214;box-shadow:0 0 10px rgba(106,138,154,.08);}
@@ -49,7 +49,7 @@ body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK S
 @keyframes pc{0%,100%{box-shadow:0 0 12px rgba(106,138,154,.12);}50%{box-shadow:0 0 24px rgba(106,138,154,.25);}}
 
 /* Canvas container */
-.canvas-container{position:relative;width:100%;}
+.canvas-container{position:relative;width:100%;overflow:hidden;}
 
 /* Hexagram side display - absolute right, no borders, no labels */
 .hex-side{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:0;}
@@ -65,7 +65,7 @@ body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK S
 .scale-controls{display:flex;gap:20px;justify-content:center;align-items:center;padding:4px 20px;}
 .scale-group{display:flex;flex-direction:column;align-items:center;gap:4px;}
 .scale-group label{font-size:9px;color:#555;letter-spacing:2px;}
-.scale-slider{-webkit-appearance:none;width:180px;height:2px;background:#222;outline:none;border-radius:2px;}
+.scale-slider{-webkit-appearance:none;width:min(160px,calc(50vw - 40px));height:2px;background:#222;outline:none;border-radius:2px;}
 .scale-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer;}
 .scale-slider.inner-s::-webkit-slider-thumb{background:#c9a96e;}
 .scale-slider.outer-s::-webkit-slider-thumb{background:#6a8a9a;}
@@ -132,11 +132,11 @@ body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK S
 <div class="scale-controls">
   <div class="scale-group">
     <label>内 卦 尺 度</label>
-    <input type="range" class="scale-slider inner-s" id="innerSlider" min="0" max="6" value="0" step="1">
+    <input type="range" class="scale-slider inner-s" id="innerSlider" min="0" max="5" value="0" step="1">
   </div>
   <div class="scale-group">
     <label>外 卦 尺 度</label>
-    <input type="range" class="scale-slider outer-s" id="outerSlider" min="0" max="6" value="4" step="1">
+    <input type="range" class="scale-slider outer-s" id="outerSlider" min="0" max="5" value="4" step="1">
   </div>
 </div>
 
@@ -181,7 +181,6 @@ body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK S
 <script>
 const SCALES=[
   {label:'心',desc:'最深处的感受',zone:'inner'},
-  {label:'意识',desc:'你在想的，理性判断',zone:'inner'},
   {label:'身体',desc:'你做出来的，别人看到的',zone:'inner'},
   {label:'我',desc:'——— 内与外的边界 ———',zone:'boundary'},
   {label:'亲密关系',desc:'伴侣、至亲、最在乎的人',zone:'outer'},
@@ -316,7 +315,7 @@ function buildRings(){
   const w=document.getElementById('canvasWrap');
   const size=w.offsetWidth;const cx=size/2,cy=size/2,scale=size/440;
   for(let i=0;i<SCALES.length;i++){
-    const r=Math.round((30+i*28)*scale);
+    const r=Math.round((30+i*34)*scale);
     const ring=document.createElement('div');
     ring.className='ring';ring.id='ring-'+i;
     if(SCALES[i].zone==='boundary') ring.classList.add('boundary');
