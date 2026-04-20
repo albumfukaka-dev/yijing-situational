@@ -7,7 +7,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:visible;}
+body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;}
 .song{font-family:"Songti SC","Noto Serif SC","Noto Serif CJK SC",serif;}
 
 .header{text-align:center;padding:20px 20px 4px;}
@@ -25,12 +25,13 @@ body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK S
 .tri-btn:hover{border-color:#444;color:#bbb;background:#161614;}
 .tri-btn.sel-warm{border-color:#c9a96e;color:#c9a96e;background:#14120e;box-shadow:0 0 10px rgba(201,169,110,.08);}
 .tri-btn.sel-cold{border-color:#6a8a9a;color:#6a8a9a;background:#0e1214;box-shadow:0 0 10px rgba(106,138,154,.08);}
-.tri-btn .t-core{font-size:9px;color:#444;margin-left:auto;letter-spacing:1px;}
+.tri-btn .t-core{font-size:9px;color:#444;margin-left:auto;letter-spacing:1px;flex-shrink:0;}
 .tri-btn.sel-warm .t-core{color:#8a7a50;}
 .tri-btn.sel-cold .t-core{color:#4a6a7a;}
+.tri-btn>span:not(.t-core){flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;min-width:0;}
 
 /* Canvas */
-.canvas-wrap{position:relative;width:440px;height:440px;margin:0 auto;flex-shrink:0;}
+.canvas-wrap{position:relative;width:min(440px,calc(100vw - 96px));height:min(440px,calc(100vw - 96px));margin:0 auto;flex-shrink:0;}
 .ring{position:absolute;border-radius:50%;border:1px solid #1a1a18;transition:all .4s ease;pointer-events:none;}
 .ring .label{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:9px;color:#333;letter-spacing:2px;white-space:nowrap;background:#0a0a09;padding:0 6px;cursor:pointer;transition:all .3s;pointer-events:auto;z-index:30;}
 .ring .label:hover{color:#666;}
@@ -312,9 +313,10 @@ function init(){
 }
 
 function buildRings(){
-  const w=document.getElementById('canvasWrap'),cx=220,cy=220;
+  const w=document.getElementById('canvasWrap');
+  const size=w.offsetWidth;const cx=size/2,cy=size/2,scale=size/440;
   for(let i=0;i<SCALES.length;i++){
-    const r=30+i*28;
+    const r=Math.round((30+i*28)*scale);
     const ring=document.createElement('div');
     ring.className='ring';ring.id='ring-'+i;
     if(SCALES[i].zone==='boundary') ring.classList.add('boundary');
