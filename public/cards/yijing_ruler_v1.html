@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>易经分析尺 · 视角调焦工具</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a09;color:#e8e0d4;font-family:"PingFang SC","Noto Sans CJK SC",sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;overflow-x:visible;}
+.song{font-family:"Songti SC","Noto Serif SC","Noto Serif CJK SC",serif;}
+
+.header{text-align:center;padding:20px 20px 4px;}
+.header h1{font-size:18px;letter-spacing:6px;color:#e8e0d4;font-weight:400;}
+.header .sub{font-size:10px;color:#555;letter-spacing:2px;margin-top:4px;}
+
+/* Picker area */
+.picker-area{display:flex;gap:16px;padding:8px 20px;max-width:680px;width:100%;}
+.picker-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.picker-label{font-size:9px;letter-spacing:3px;margin-bottom:2px;}
+.picker-label.warm{color:#c9a96e;}
+.picker-label.cold{color:#6a8a9a;}
+
+.tri-btn{width:100%;background:#111110;border:1px solid #1e1e1c;color:#777;font-size:11px;padding:5px 8px;cursor:pointer;border-radius:4px;transition:all .3s;display:flex;align-items:center;gap:8px;letter-spacing:.5px;}
+.tri-btn:hover{border-color:#444;color:#bbb;background:#161614;}
+.tri-btn.sel-warm{border-color:#c9a96e;color:#c9a96e;background:#14120e;box-shadow:0 0 10px rgba(201,169,110,.08);}
+.tri-btn.sel-cold{border-color:#6a8a9a;color:#6a8a9a;background:#0e1214;box-shadow:0 0 10px rgba(106,138,154,.08);}
+.tri-btn .t-core{font-size:9px;color:#444;margin-left:auto;letter-spacing:1px;}
+.tri-btn.sel-warm .t-core{color:#8a7a50;}
+.tri-btn.sel-cold .t-core{color:#4a6a7a;}
+
+/* Canvas */
+.canvas-wrap{position:relative;width:440px;height:440px;margin:0 auto;flex-shrink:0;}
+.ring{position:absolute;border-radius:50%;border:1px solid #1a1a18;transition:all .4s ease;pointer-events:none;}
+.ring .label{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:9px;color:#333;letter-spacing:2px;white-space:nowrap;background:#0a0a09;padding:0 6px;cursor:pointer;transition:all .3s;pointer-events:auto;z-index:30;}
+.ring .label:hover{color:#666;}
+.ring .label:hover::after{content:' 双击编辑';font-size:8px;color:#555;}
+.ring.inner-active .label{font-size:13px !important;color:#c9a96e !important;letter-spacing:3px;text-shadow:0 0 10px rgba(201,169,110,.3);}
+.ring.outer-active .label{font-size:13px !important;color:#6a8a9a !important;letter-spacing:3px;text-shadow:0 0 10px rgba(106,138,154,.3);}
+.ring .label-input{background:transparent;border:none;border-bottom:1px solid #555;color:#e8e0d4;font-size:11px;letter-spacing:2px;text-align:center;outline:none;font-family:inherit;width:80px;padding:0 2px;}
+.ring.inner-active{border-color:#c9a96e !important;animation:pw 3s ease-in-out infinite;pointer-events:none;}
+.ring.outer-active{border-color:#6a8a9a !important;animation:pc 3s ease-in-out infinite;pointer-events:none;}
+.ring.in-range{background:rgba(255,255,255,.012);}
+.ring.boundary{border:1.5px dashed #c9a96e44;}
+.ring.boundary .label{color:#c9a96e44;font-size:10px;letter-spacing:4px;}
+.center-dot{position:absolute;width:8px;height:8px;background:#c9a96e;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;box-shadow:0 0 12px rgba(201,169,110,.3);}
+@keyframes pw{0%,100%{box-shadow:0 0 12px rgba(201,169,110,.12);}50%{box-shadow:0 0 24px rgba(201,169,110,.25);}}
+@keyframes pc{0%,100%{box-shadow:0 0 12px rgba(106,138,154,.12);}50%{box-shadow:0 0 24px rgba(106,138,154,.25);}}
+
+/* Canvas container */
+.canvas-container{position:relative;width:100%;}
+
+/* Hexagram side display - absolute right, no borders, no labels */
+.hex-side{position:absolute;right:16px;top:50%;transform:translateY(-50%);display:none;flex-direction:column;align-items:center;gap:0;}
+.hex-side.show{display:flex;}
+.hex-side-tri{display:flex;flex-direction:column;align-items:center;gap:3px;padding:1px 0;}
+.hex-side-tri+.hex-side-tri{margin-top:-7px;}
+.hex-side-name{margin-top:8px;text-align:center;line-height:1.5;}
+.hex-side-name .hline1{font-size:12px;letter-spacing:3px;color:#666;font-family:"Songti SC","Noto Serif SC",serif;}
+.hex-side-name .hline2{font-size:20px;letter-spacing:4px;color:#e8e0d4;font-family:"Songti SC","Noto Serif SC",serif;}
+.hex-side-name .hnum{font-size:9px;color:#444;letter-spacing:2px;margin-top:3px;}
+
+/* Controls */
+.scale-controls{display:flex;gap:20px;justify-content:center;align-items:center;padding:4px 20px;}
+.scale-group{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.scale-group label{font-size:9px;color:#555;letter-spacing:2px;}
+.scale-slider{-webkit-appearance:none;width:180px;height:2px;background:#222;outline:none;border-radius:2px;}
+.scale-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;cursor:pointer;}
+.scale-slider.inner-s::-webkit-slider-thumb{background:#c9a96e;}
+.scale-slider.outer-s::-webkit-slider-thumb{background:#6a8a9a;}
+
+/* Info */
+.info-area{display:flex;gap:16px;padding:12px 20px 0;max-width:680px;width:100%;}
+.info-panel{flex:1;background:#0e0e0c;border:1px solid #1a1a18;border-radius:6px;padding:14px;min-height:120px;transition:border-color .3s;}
+.info-panel.warm-border{border-color:#2a2218;}
+.info-panel.cold-border{border-color:#1a2a30;}
+.panel-tag{font-size:9px;letter-spacing:3px;margin-bottom:6px;}
+.panel-tag.warm{color:#c9a96e;}
+.panel-tag.cold{color:#6a8a9a;}
+.panel-name{font-size:16px;letter-spacing:3px;margin-bottom:3px;}
+.panel-core{font-size:11px;letter-spacing:2px;margin-bottom:6px;}
+.panel-core.warm{color:#c9a96e;}
+.panel-core.cold{color:#6a8a9a;}
+.panel-desc{font-size:12.5px;color:#9e9588;line-height:1.9;letter-spacing:.3px;}
+.panel-flip{font-size:11px;color:#3a3a38;margin-top:6px;padding-top:6px;border-top:1px solid #1a1a18;line-height:1.7;}
+.panel-scale{font-size:9px;color:#555;letter-spacing:1px;margin-bottom:4px;}
+
+.brand{font-size:9px;color:#2a2a28;letter-spacing:2px;text-align:center;padding:6px 0 20px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 class="song">易经分析尺</h1>
+  <div class="sub">选两种能量的状态 · 内与外 / 你与某人 / 任意两种处境</div>
+</div>
+
+<!-- Trigram Picker -->
+<div class="picker-area">
+  <div class="picker-col">
+    <div class="picker-label warm">这 一 边</div>
+    <div id="innerPicker"></div>
+  </div>
+  <div class="picker-col">
+    <div class="picker-label cold">那 一 边</div>
+    <div id="outerPicker"></div>
+  </div>
+</div>
+
+<!-- Canvas + Hex Side -->
+<div class="canvas-container">
+  <div class="canvas-wrap" id="canvasWrap">
+    <div class="center-dot"></div>
+  </div>
+  <div class="hex-side" id="hexSide">
+    <div class="hex-side-tri" id="outerBox">
+      <div id="outerTriSvg"></div>
+    </div>
+    <div class="hex-side-tri" id="innerBox">
+      <div id="innerTriSvg"></div>
+    </div>
+    <div class="hex-side-name">
+      <div class="hline1" id="hexLine1"></div>
+      <div class="hline2" id="hexName"></div>
+      <div class="hnum" id="hexNum"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Scale Controls -->
+<div class="scale-controls">
+  <div class="scale-group">
+    <label>内 卦 尺 度</label>
+    <input type="range" class="scale-slider inner-s" id="innerSlider" min="0" max="6" value="0" step="1">
+  </div>
+  <div class="scale-group">
+    <label>外 卦 尺 度</label>
+    <input type="range" class="scale-slider outer-s" id="outerSlider" min="0" max="6" value="4" step="1">
+  </div>
+</div>
+
+<!-- Info Panels -->
+<div class="info-area">
+  <div class="info-panel warm-border" id="innerPanel">
+    <div class="panel-tag warm">内 卦</div>
+    <div class="panel-scale" id="innerScaleLabel">—</div>
+    <div class="song panel-name" id="innerName">—</div>
+    <div class="panel-core warm" id="innerCore"></div>
+    <div class="song panel-desc" id="innerDesc">选择你的内在感受</div>
+    <div class="panel-flip" id="innerFlip"></div>
+  </div>
+  <div class="info-panel cold-border" id="outerPanel">
+    <div class="panel-tag cold">外 卦</div>
+    <div class="panel-scale" id="outerScaleLabel">—</div>
+    <div class="song panel-name" id="outerName">—</div>
+    <div class="panel-core cold" id="outerCore"></div>
+    <div class="song panel-desc" id="outerDesc">选择你的外部环境</div>
+    <div class="panel-flip" id="outerFlip"></div>
+  </div>
+</div>
+
+<!-- Extended Reading: two columns extending from info panels -->
+<div class="info-area" id="extendArea" style="display:none;padding-top:0;">
+  <div class="info-panel warm-border" style="border-top:none;border-top-left-radius:0;border-top-right-radius:0;padding-top:0;">
+    <div style="border-top:1px dashed #2a2218;padding-top:10px;margin-bottom:6px;">
+      <div style="font-size:9px;color:#c9a96e;letter-spacing:2px;margin-bottom:8px;">延 伸 · 内 卦</div>
+    </div>
+    <div id="extendInner" class="song" style="font-size:12px;color:#777;line-height:2;letter-spacing:.3px;">内容待补充</div>
+  </div>
+  <div class="info-panel cold-border" style="border-top:none;border-top-left-radius:0;border-top-right-radius:0;padding-top:0;">
+    <div style="border-top:1px dashed #1a2a30;padding-top:10px;margin-bottom:6px;">
+      <div style="font-size:9px;color:#6a8a9a;letter-spacing:2px;margin-bottom:8px;">延 伸 · 外 卦</div>
+    </div>
+    <div id="extendOuter" class="song" style="font-size:12px;color:#777;line-height:2;letter-spacing:.3px;">内容待补充</div>
+  </div>
+</div>
+
+<div class="brand">@野野野在游戏人间 · 易经分析尺 v1</div>
+
+<script>
+const SCALES=[
+  {label:'心',desc:'最深处的感受',zone:'inner'},
+  {label:'意识',desc:'你在想的，理性判断',zone:'inner'},
+  {label:'身体',desc:'你做出来的，别人看到的',zone:'inner'},
+  {label:'我',desc:'——— 内与外的边界 ———',zone:'boundary'},
+  {label:'亲密关系',desc:'伴侣、至亲、最在乎的人',zone:'outer'},
+  {label:'社交 · 职场',desc:'朋友、同事、你选择的圈子',zone:'outer'},
+  {label:'社群 · 环境',desc:'你所在的城市、时代、大环境',zone:'outer'},
+];
+
+const TRI={
+  qian:{name:'乾',nature:'天',core:'生命力',type:'yang',
+    inner:'自发向上，持续运转，不需外力推动',
+    outer:'强势自驱的场域，高能量要求的环境',
+    flip_i:'停不下来，过载，或被强势场域裹挟',
+    flip_o:'强势系统裹挟，必须跟上否则被淘汰',
+    feel:'持续向上，停不下来',
+    feel_o:'强势运转的高能环境',
+    lines:[1,1,1]},
+  li:{name:'离',nature:'火',core:'感召力',type:'yang',
+    inner:'自发给出温暖，向外散热，有感召引力',
+    outer:'有感召力的场域，光明和方向在牵引',
+    flip_i:'内心中空，依附外部才能撑住',
+    flip_o:'舞台浮华，没有真内容就只是表面热闹',
+    feel:'向外发光，想要照亮',
+    feel_o:'光明牵引的展示舞台',
+    lines:[1,0,1]},
+  zhen:{name:'震',nature:'雷',core:'爆发力',type:'yang',
+    inner:'有爆发冲动，瞬间启动，强烈不持续',
+    outer:'外部有突发震动，变化来得猛烈',
+    flip_i:'三分钟热度，冲动多于持续',
+    flip_o:'外部震荡不稳，充满不确定',
+    feel:'突然想动，冲动爆发',
+    feel_o:'突发震动，猛烈变化',
+    lines:[1,0,0]},
+  gen:{name:'艮',nature:'山',core:'结构力',type:'yang',
+    inner:'内有章法，上升后知止，能构建秩序',
+    outer:'有边界的体系，结构和规则在定形',
+    flip_i:'框架僵化，止变成困，无法突破',
+    flip_o:'体系天花板明显，规则死板',
+    feel:'想停下来，守住边界',
+    feel_o:'有边界的体系和规则',
+    lines:[0,0,1]},
+  kun:{name:'坤',nature:'地',core:'容纳',type:'yin',
+    inner:'开放承接，顺应，无条件接收',
+    outer:'广阔包容的场域，或沉厚的集体意志',
+    flip_i:'失去方向，随波逐流',
+    flip_o:'空旷而无支撑，被集体意志淹没',
+    feel:'接受一切，顺其自然',
+    feel_o:'广阔包容的大地场域',
+    lines:[0,0,0]},
+  kan:{name:'坎',nature:'水',core:'险流',type:'yin',
+    inner:'处于险境忐忑，但内有实力核心',
+    outer:'险阻横亘，充满不确定的外部',
+    flip_i:'被自己的不安困住，实力出不来',
+    flip_o:'外部充满陷阱，条件不成熟',
+    feel:'不安，但心里有底',
+    feel_o:'险阻横亘，充满不确定',
+    lines:[0,1,0]},
+  xun:{name:'巽',nature:'风',core:'流通',type:'yin',
+    inner:'柔顺入局，以流通交互代替对抗',
+    outer:'信息四面流传，分散的交互场',
+    flip_i:'根基不稳，方向感弱',
+    flip_o:'能量被分散，广播却无法聚焦',
+    feel:'随风而动，渗透进入',
+    feel_o:'信息流传的分散交互',
+    lines:[0,1,1]},
+  dui:{name:'兑',nature:'泽',core:'汇聚',type:'yin',
+    inner:'东西徐徐流来聚集，感受到汇聚的喜悦',
+    outer:'开放的汇聚场，吸引力向中心集',
+    flip_i:'注意力分散，能量往外散但不聚',
+    flip_o:'浅，流动性太强，关系不深',
+    feel:'东西在慢慢流来，喜悦',
+    feel_o:'开放汇聚的吸引场',
+    lines:[1,1,0]},
+};
+
+// 延伸内容：融合"八卦内在哲学"定性 + "卦的意象"完整版
+const EXTEND={
+  qian:{phil:'生命力',phil_line:'你的生命力不需要你推它',
+    imagery:`<b>能量形态</b><br>方向单向向外、向上，没有回旋，没有犹豫。密度极高，像被压缩到临界点然后释放。节奏持续、不间断——不是爆发一次就停，而是自我维持的推进。<br><br><b>自然意象</b><br>· 太阳黑子爆发——巨大的能量从内部向外喷射<br>· 闪电——最直接的路径，不绕弯<br>· 高压气团——看不见但一切都在它的压力下运动<br>· 山顶的风——持续、强劲、无遮挡<br><br><b>生物意象</b><br>· 鹰——不扑翅膀就能借气流升到最高处<br>· 独居大型猫科动物——不需要群体，自给自足的力量<br>· 巨杉——向上生长几千年，单株，垂直，密度极高<br><br><b>人格原型</b><br>· 内驱力极强，不需要外部认可就能启动<br>· 有强烈方向感，很少自我怀疑<br>· 开创者、先行者，独自走在前面的那种<br><br><b>社会现象</b><br>· 技术的指数级增长——自我强化，不需要外部推动<br>· 创业初期的那股劲——在没有证据时就确信<br>· 文明的扩张时期——不是维持，是开疆<br><br><b>阴影</b><br>· 极阳无阴，没有接收能力——给予但无法被给予<br>· 自信变成傲慢，方向感变成固执<br>· 乾极则坤生——纯阳内部已经藏着崩塌的种子`},
+  li:{phil:'不执着的热情',phil_line:'全力以赴地投入，走的时候干干净净',
+    imagery:`<b>能量形态</b><br>向外辐射，但中心是空的。不是实心的推进，而是因为中空才能发光——光从虚处来。有温度，有吸引力，但本身不抓取任何东西。<br><br><b>自然意象</b><br>· 火焰——持续燃烧，需要燃料，但发出的光照亮一切<br>· 太阳——不移动，但万物都围绕它定向<br>· 萤火虫——黑暗里的光，在对的环境里无法被忽视<br>· 闪光的水面——光附着在水的表面产生的现象<br><br><b>生物意象</b><br>· 变色龙——对环境极度敏感，用自身变化来回应周围的光<br>· 孔雀——展示性的，存在本身就是信号发射<br>· 珊瑚——看起来是岩石，实际是活的，创造出整个生态系统的色彩<br><br><b>人格原型</b><br>· 有强烈存在感，进入一个空间，光就不一样了<br>· 内心有一个虚空，需要外部连接来燃烧——不是缺陷，是结构<br>· 极强的表达力——想法、情感、美，都能转化成别人能感知的东西<br><br><b>社会现象</b><br>· 品牌——不是产品本身，是产品发出的光晕<br>· 媒体——不创造事件，但照亮事件，被照亮的就存在<br>· 流行文化icon——本身可能是空的，但成为了时代的光源<br><br><b>阴影</b><br>· 燃烧需要消耗——持续辐射而没有补充，容易耗尽<br>· 光太强则刺眼，吸引力变成压迫<br>· 没有燃料的火——当依附对象消失，空心暴露出来，是真实的虚无`},
+  zhen:{phil:'不确定',phil_line:'在什么都不确定的时候，先动了',
+    imagery:`<b>能量形态</b><br>不是持续推进，而是突发的、垂直向上的冲击。力量积累在最底层，在临界点爆发。爆发之后有震荡、有余波，然后归于暂时静止。<br><br><b>自然意象</b><br>· 地震——力量从地底传来，地表一切被动摇<br>· 春雷——第一声雷，惊蛰，万物被震醒<br>· 火山初期的地表隆起——还没喷发，但地面已经开始变形<br>· 种子破土的瞬间——撑破外壳的力，集中而猛烈<br><br><b>生物意象</b><br>· 蝉的羽化——在地下等了七年，破壳而出的那一刻<br>· 公牛冲锋——不是持续的力，是那一瞬间的爆发和震慑<br>· 啄木鸟——每一击都是垂直冲击，穿透，然后停，再穿透<br><br><b>人格原型</b><br>· 行动先于思考，先动了再说<br>· 有强烈启动能量，天然的破冰者<br>· 革命的发起者，但不一定是革命的完成者<br><br><b>社会现象</b><br>· 颠覆性技术出现的瞬间——不是发展期，是iPhone发布那一刻<br>· 社会运动的导火索——一个事件引爆积累已久的能量<br>· 前卫艺术运动——达达、朋克——先震碎，不管之后怎样<br><br><b>阴影</b><br>· 震动会惊吓——不是所有人都准备好被震醒，冲击可以是创伤<br>· 只会启动不会维持，虎头蛇尾<br>· 为震而震——冲击变成目的本身，失去了原本要打开的东西`},
+  gen:{phil:'定',phil_line:'慢得像不动一样。定不是不动',
+    imagery:`<b>能量形态</b><br>不是没有力，是力在最高点选择了停止。不是耗尽，是主动的静止——知道到这里了，不再往前。能量向内收、向下沉，形成极度稳定的重量感。<br><br><b>自然意象</b><br>· 山——不是在生长的山，是已经在那里的山，亿万年压力凝固成的静止<br>· 冰川——看起来完全不动，但内部有极缓慢的流动<br>· 悬崖边缘——到这里不能再往前，边界本身成为力量<br>· 河床里被水磨光的石头——经历了一切，现在完全静止<br><br><b>生物意象</b><br>· 龟——不是慢，是在自己的壳里完全自足<br>· 树懒——极度静止不是懒，是极度节能的生存智慧<br>· 珊瑚礁基岩——几千年不动，但承载了一切<br><br><b>人格原型</b><br>· 知道什么时候停——这是最难的能力，比启动更难<br>· 有强烈边界感，不是冷漠，是清楚自己在哪里结束<br>· 不是发号施令的人，是说"到此为止"的人<br><br><b>社会现象</b><br>· 法律和边界——"到这里不能再过"的那条线<br>· 博物馆——把时间凝固住，让历史在某个点停下来被看见<br>· 传统——沉淀成不动的基底，让新的东西有地方生长<br><br><b>阴影</b><br>· 止得太早——还没到真正临界点就停了，是逃避而不是定力<br>· 静止变成隔绝——边界感强到没有东西能进来，成了孤岛<br>· 山的重量如果没有方向，就变成压制`},
+  kun:{phil:'接纳和内化',phil_line:'你接住的，都会变成你的根',
+    imagery:`<b>能量形态</b><br>方向向内、向下、向深处。不是被动，而是主动的接收——像引力，不推，但一切都被它吸引。密度不是压缩的密度，而是容积的密度，越深越大。<br><br><b>自然意象</b><br>· 深海——压力极大，黑暗，但孕育着最奇异的生命<br>· 土壤——什么都接收，什么都能在里面发生转化<br>· 山谷——不是山，是山与山之间的空间，声音在这里回响<br>· 冬天的地面——表面静止，地下一切都在等待<br><br><b>生物意象</b><br>· 章鱼——极度柔软，没有骨骼，但能渗入任何形状<br>· 大象——不是速度和锋芒，是重量和记忆<br>· 菌根网络——地下连接系统，看不见，但整片森林都靠它传递养分<br><br><b>人格原型</b><br>· 不先发言，但发言之后方向就定了<br>· 有极强涵容力——能承接别人承接不了的情绪和复杂性<br>· 不是母亲的温柔，而是大地的无差别承载——善恶都接，不评判<br><br><b>社会现象</b><br>· 基础设施——没人注意到，但一切运行都依赖它<br>· 文化的底层语法——不是显眼的价值观，是从不言说的规则<br>· 资本的沉淀层——不是流动的钱，是几百年积累的土地、机构、习俗<br><br><b>阴影</b><br>· 承载无限则失去边界，什么都接收最终什么都留不住<br>· 涵容变成吞噬——表面接纳，实则把一切拉进自己的引力<br>· 坤极则乾生——绝对虚空里会突然涌现出不受控的力`},
+  kan:{phil:'执着于真的退让',phil_line:'退掉了能退的，守住了不能退的',
+    imagery:`<b>能量形态</b><br>力量真实、强劲，但被困住了。不是没有力，是力在受限通道里运动——因为受限，压力极大，流速极快。方向不是自己选的，是被地形逼出来的。<br><br><b>自然意象</b><br>· 地下暗河——在黑暗岩层里流动，看不见，但力量巨大<br>· 峡谷里的激流——被两岸逼着加速的水<br>· 深海洋流——在表面之下，冷而黑暗，驱动着整个海洋循环<br>· 冬天——一切收缩到最小，在黑暗里维持核心热量<br><br><b>生物意象</b><br>· 深海鱼——在极端压力下进化出的生命，发光，用最小能量维持存在<br>· 熊的冬眠——不是放弃，是把所有能量收到最核心的地方<br>· 鳗鱼——在最幽暗水域游动，没有鳍，靠整个身体波动前进<br><br><b>人格原型</b><br>· 经历过真实险境——不是表演的深刻，是真的去过那个地方<br>· 在危机中反而冷静，内部有一个不会被淹没的核心<br>· 不多说话，说出来的每一句都是从深处来的<br><br><b>社会现象</b><br>· 经济危机中的企业——被市场压力逼着找到平时找不到的出路<br>· 地下文化运动——在压制下反而更纯粹，更有力量<br>· 战时的艺术——资源极度匮乏，产出的东西有平时没有的密度<br><br><b>阴影</b><br>· 习惯了险境，反而在平静中不知所措——需要压力才感觉到自己存在<br>· 陷得太深，出不来——险境从考验变成了定义自己的方式<br>· 坎的水会淹没自己——核心力量撑不住，就真的沉下去了`},
+  xun:{phil:'弥散的感知',phil_line:'触角散开，什么都在接收',
+    imagery:`<b>能量形态</b><br>不冲击，不对抗，找到缝隙然后进入。力量横向、弥散、持续。不是一次性爆发，而是无处不在的渗透——你感觉不到它在推，但回头看，它已经改变了一切的形状。<br><br><b>自然意象</b><br>· 风——不是台风，是持续的风，绕过障碍，改变地貌，从不正面对抗<br>· 水渗入岩石的裂缝——不是冲击，是等待和渗透，最终把岩石撑开<br>· 藤蔓——沿着任何可以生长的方向生长，没有固定形状，但覆盖一切<br>· 气味的扩散——看不见，但无法阻挡，进入每一个空间<br><br><b>生物意象</b><br>· 真菌的菌丝——钻入木头、岩石、皮肤的那个能力<br>· 候鸟——不强行，顺着气流和季节，找到最省力的路径穿越大陆<br>· 章鱼的触手——渗入每一个角落，感知每一个细节<br><br><b>人格原型</b><br>· 不正面交锋，从侧面进入，等你发现他已经影响了你的想法<br>· 极强观察力，能看到别人看不到的缝隙和机会<br>· 改变发生了，但你说不清楚是怎么发生的<br><br><b>社会现象</b><br>· 算法推荐机制——不强迫，但慢慢改变了你想看什么、想要什么<br>· 软实力——不是军事，是文化、语言、生活方式的渗透<br>· 病毒式传播——内容找到每一个社交缝隙钻进去<br><br><b>阴影</b><br>· 太善于渗透则失去自己的形状——适应太多环境，不知道自己原本是什么<br>· 影响力隐形化，容易滑向不透明的操控<br>· 无处不在就是无处真正在场——弥散到极致，力量稀释掉了`},
+  dui:{phil:'凝聚的感知',phil_line:'在场，微微凝聚，感受到了',
+    imagery:`<b>能量形态</b><br>力量充实、向上，但在最顶端开了一个口。不是缺口，是主动的开放——能量从这个口流出去，也从这个口接收进来。有喜悦感，有流动感，是八卦里最有交换性的能量。<br><br><b>自然意象</b><br>· 湖面——不是海的深邃，不是河的流动，是湖，有边界，但表面完全开放<br>· 山顶的缺口——风从这里过，声音从这里过，天然的开口<br>· 泉眼——从地下涌出来的地方，内部的力找到了出口<br>· 河流入海的河口——两种水在这里交换，淡水和咸水<br><br><b>生物意象</b><br>· 海豚——不是力量型的，是交流型的，存在本身就是喜悦的信号发射<br>· 鸟的鸣叫——不是为了什么目的，是能量自然溢出的声音<br>· 蜜蜂——在花和蜂巢之间来回，每一次都是交换，整个生态因此运转<br><br><b>人格原型</b><br>· 天然的连接者——不是他有多强，是他在场的时候交流就发生了<br>· 有真实的喜悦感，不是表演出来的，是内部有东西在往外流<br>· 能说出别人说不出的话——不是更聪明，是开口的勇气和时机感比别人好<br><br><b>社会现象</b><br>· 市场——不是商品本身，是交换发生的那个场域<br>· 节日——平时关着的口在这一天打开，能量在人与人之间自由流动<br>· 谈判桌——两个封闭系统打开一个口开始交换的时刻<br><br><b>阴影</b><br>· 喜悦可以被利用——兑的开口是真实的，但别人可以拿走不该拿走的东西<br>· 太擅长交换，容易没有自己的积累——什么都流出去了，内部变空<br>· 悦变成讨好——开口不再是真实的流动，而是为了让对方高兴，失去了自己`},
+};
+
+
+const HEXAGRAMS=[
+  ['qian','qian',1,'乾'],['kun','kun',2,'坤'],['zhen','kan',3,'屯'],['kan','gen',4,'蒙'],
+  ['qian','kan',5,'需'],['kan','qian',6,'讼'],['kan','kun',7,'师'],['kun','kan',8,'比'],
+  ['qian','xun',9,'小畜'],['dui','qian',10,'履'],['qian','kun',11,'泰'],['kun','qian',12,'否'],
+  ['li','qian',13,'同人'],['qian','li',14,'大有'],['gen','kun',15,'谦'],['kun','zhen',16,'豫'],
+  ['zhen','dui',17,'随'],['xun','gen',18,'蛊'],['dui','kun',19,'临'],['kun','xun',20,'观'],
+  ['zhen','li',21,'噬嗑'],['li','gen',22,'贲'],['kun','gen',23,'剥'],['zhen','kun',24,'复'],
+  ['zhen','qian',25,'无妄'],['qian','gen',26,'大畜'],['zhen','gen',27,'颐'],['xun','dui',28,'大过'],
+  ['kan','kan',29,'坎'],['li','li',30,'离'],['gen','dui',31,'咸'],['xun','zhen',32,'恒'],
+  ['gen','qian',33,'遁'],['qian','zhen',34,'大壮'],['kun','li',35,'晋'],['li','kun',36,'明夷'],
+  ['li','xun',37,'家人'],['dui','li',38,'睽'],['gen','kan',39,'蹇'],['kan','zhen',40,'解'],
+  ['dui','gen',41,'损'],['zhen','xun',42,'益'],['qian','dui',43,'夬'],['xun','qian',44,'姤'],
+  ['kun','dui',45,'萃'],['xun','kun',46,'升'],['kan','dui',47,'困'],['xun','kan',48,'井'],
+  ['li','dui',49,'革'],['xun','li',50,'鼎'],['zhen','zhen',51,'震'],['gen','gen',52,'艮'],
+  ['gen','xun',53,'渐'],['dui','zhen',54,'归妹'],['li','zhen',55,'丰'],['gen','li',56,'旅'],
+  ['xun','xun',57,'巽'],['dui','dui',58,'兑'],['kan','xun',59,'涣'],['dui','kan',60,'节'],
+  ['dui','xun',61,'中孚'],['gen','zhen',62,'小过'],['li','kan',63,'既济'],['kan','li',64,'未济'],
+];
+
+let selInner=null, selOuter=null, innerPos=0, outerPos=4;
+
+function init(){
+  buildRings();
+  buildPickers();
+  document.getElementById('innerSlider').addEventListener('input',e=>{
+    innerPos=+e.target.value;
+    updateView();
+  });
+  document.getElementById('outerSlider').addEventListener('input',e=>{
+    outerPos=+e.target.value;
+    updateView();
+  });
+  updateView();
+}
+
+function buildRings(){
+  const w=document.getElementById('canvasWrap'),cx=220,cy=220;
+  for(let i=0;i<SCALES.length;i++){
+    const r=30+i*28;
+    const ring=document.createElement('div');
+    ring.className='ring';ring.id='ring-'+i;
+    if(SCALES[i].zone==='boundary') ring.classList.add('boundary');
+    ring.style.width=ring.style.height=(r*2)+'px';
+    ring.style.left=(cx-r)+'px';ring.style.top=(cy-r)+'px';
+    const lbl=document.createElement('div');
+    lbl.className='label';lbl.id='lbl-'+i;
+    lbl.textContent=SCALES[i].label;
+    // double-click to edit
+    lbl.addEventListener('dblclick',function(e){
+      e.stopPropagation();
+      const idx=i;
+      const inp=document.createElement('input');
+      inp.className='label-input';
+      inp.value=lbl.textContent;
+      inp.style.width=Math.max(60,lbl.textContent.length*14)+'px';
+      lbl.textContent='';
+      lbl.appendChild(inp);
+      inp.focus();inp.select();
+      function done(){SCALES[idx].label=inp.value||SCALES[idx].label;lbl.textContent=SCALES[idx].label;}
+      inp.addEventListener('blur',done);
+      inp.addEventListener('keydown',function(ev){if(ev.key==='Enter'){inp.blur();}});
+    });
+    ring.appendChild(lbl);w.appendChild(ring);
+  }
+}
+
+function svgTri(lines,color,sz){
+  sz=sz||24;
+  let s=`<svg viewBox="0 0 34 46" width="${sz}">`;
+  const yy=[9,23,37];
+  for(let i=0;i<3;i++){
+    const li=lines[2-i],y=yy[i];
+    if(li===1) s+=`<line x1="0" y1="${y}" x2="34" y2="${y}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>`;
+    else s+=`<line x1="0" y1="${y}" x2="12" y2="${y}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/><line x1="22" y1="${y}" x2="34" y2="${y}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>`;
+  }
+  return s+'</svg>';
+}
+
+function buildPickers(){
+  const keys=['qian','li','zhen','gen','kun','kan','xun','dui'];
+  const ip=document.getElementById('innerPicker'), op=document.getElementById('outerPicker');
+  keys.forEach(k=>{
+    const t=TRI[k], col=t.type==='yang'?'#c9a96e':'#6a8a9a';
+    // inner - uses feel (self-perspective)
+    const bi=document.createElement('button');
+    bi.className='tri-btn';bi.id='ib-'+k;
+    bi.innerHTML=svgTri(t.lines,col,16)+`<span>${t.name} · ${t.feel}</span><span class="t-core">${t.core}</span>`;
+    bi.onclick=()=>{selInner=k;document.querySelectorAll('#innerPicker .tri-btn').forEach(b=>b.className='tri-btn');bi.classList.add('sel-warm');updateView();};
+    ip.appendChild(bi);
+    // outer - uses feel_o (environment-perspective)
+    const bo=document.createElement('button');
+    bo.className='tri-btn';bo.id='ob-'+k;
+    bo.innerHTML=svgTri(t.lines,col,16)+`<span>${t.name} · ${t.feel_o}</span><span class="t-core">${t.core}</span>`;
+    bo.onclick=()=>{selOuter=k;document.querySelectorAll('#outerPicker .tri-btn').forEach(b=>b.className='tri-btn');bo.classList.add('sel-cold');updateView();};
+    op.appendChild(bo);
+  });
+}
+
+function findHex(ik,ok){
+  const h=HEXAGRAMS.find(x=>x[0]===ik&&x[1]===ok);
+  return h||null;
+}
+
+function updateView(){
+  // rings
+  for(let i=0;i<SCALES.length;i++){
+    const r=document.getElementById('ring-'+i);
+    r.className='ring';
+    if(SCALES[i].zone==='boundary') r.classList.add('boundary');
+  }
+
+  const hasInner=selInner!==null, hasOuter=selOuter!==null;
+  const inner=hasInner?TRI[selInner]:null, outer=hasOuter?TRI[selOuter]:null;
+
+  // highlight rings
+  if(hasInner) document.getElementById('ring-'+innerPos).classList.add('inner-active');
+  if(hasOuter) document.getElementById('ring-'+outerPos).classList.add('outer-active');
+  // in-range
+  if(hasInner&&hasOuter){
+    const lo=Math.min(innerPos,outerPos), hi=Math.max(innerPos,outerPos);
+    for(let i=lo+1;i<hi;i++) document.getElementById('ring-'+i).classList.add('in-range');
+  }
+
+  // side hex display
+  const side=document.getElementById('hexSide');
+  const hn=document.getElementById('hexName'),hnum=document.getElementById('hexNum'),hl1=document.getElementById('hexLine1');
+  const isvg=document.getElementById('innerTriSvg'),osvg=document.getElementById('outerTriSvg');
+
+  if(hasInner){
+    const col=inner.type==='yang'?'#c9a96e':'#6a8a9a';
+    isvg.innerHTML=svgTri(inner.lines,col,30);
+  }else{isvg.innerHTML='';}
+
+  if(hasOuter){
+    const col=outer.type==='yang'?'#c9a96e':'#6a8a9a';
+    osvg.innerHTML=svgTri(outer.lines,col,30);
+  }else{osvg.innerHTML='';}
+
+  if(hasInner&&hasOuter){
+    const hex=findHex(selInner,selOuter);
+    if(hex){
+      const outerN=TRI[hex[1]].nature, innerN=TRI[hex[0]].nature;
+      const isPure=hex[0]===hex[1];
+      hl1.textContent=isPure?hex[3]+'为':outerN+innerN;
+      hn.textContent=isPure?outerN:hex[3];
+      hnum.textContent='第 '+hex[2]+' 卦';
+    }else{
+      hl1.textContent='';hn.textContent='—';hnum.textContent='';
+    }
+    side.classList.add('show');
+  }else if(hasInner||hasOuter){
+    hl1.textContent='';hn.textContent='';hnum.textContent='';
+    side.classList.add('show');
+  }else{
+    side.classList.remove('show');
+  }
+
+  // panels
+  if(hasInner){
+    document.getElementById('innerScaleLabel').textContent='尺度：'+SCALES[innerPos].label+' — '+SCALES[innerPos].desc;
+    document.getElementById('innerName').textContent=inner.name+' · '+inner.nature;
+    document.getElementById('innerCore').textContent=inner.core;
+    document.getElementById('innerDesc').textContent=inner.inner;
+    document.getElementById('innerFlip').textContent='另一面：'+inner.flip_i;
+  }else{
+    document.getElementById('innerScaleLabel').textContent='—';
+    document.getElementById('innerName').textContent='—';
+    document.getElementById('innerCore').textContent='';
+    document.getElementById('innerDesc').textContent='← 选择你的内在感受';
+    document.getElementById('innerFlip').textContent='';
+  }
+  if(hasOuter){
+    document.getElementById('outerScaleLabel').textContent='尺度：'+SCALES[outerPos].label+' — '+SCALES[outerPos].desc;
+    document.getElementById('outerName').textContent=outer.name+' · '+outer.nature;
+    document.getElementById('outerCore').textContent=outer.core;
+    document.getElementById('outerDesc').textContent=outer.outer;
+    document.getElementById('outerFlip').textContent='另一面：'+outer.flip_o;
+  }else{
+    document.getElementById('outerScaleLabel').textContent='—';
+    document.getElementById('outerName').textContent='—';
+    document.getElementById('outerCore').textContent='';
+    document.getElementById('outerDesc').textContent='← 选择你的外部环境';
+    document.getElementById('outerFlip').textContent='';
+  }
+
+  // extended reading - two columns using EXTEND data
+  const ext=document.getElementById('extendArea');
+  const ei=document.getElementById('extendInner'), eo=document.getElementById('extendOuter');
+  if(hasInner&&hasOuter){
+    ext.style.display='flex';
+    const exi=EXTEND[selInner], exo=EXTEND[selOuter];
+    ei.innerHTML=`<div style="font-size:14px;color:#c9a96e;letter-spacing:2px;margin-bottom:4px;">${exi.phil}</div>`+
+      `<div style="font-size:11px;color:#8a7a50;margin-bottom:12px;font-style:italic;">"${exi.phil_line}"</div>`+
+      `<div style="font-size:12px;color:#9e9588;line-height:2;">${exi.imagery}</div>`;
+    eo.innerHTML=`<div style="font-size:14px;color:#6a8a9a;letter-spacing:2px;margin-bottom:4px;">${exo.phil}</div>`+
+      `<div style="font-size:11px;color:#4a6a7a;margin-bottom:12px;font-style:italic;">"${exo.phil_line}"</div>`+
+      `<div style="font-size:12px;color:#9e9588;line-height:2;">${exo.imagery}</div>`;
+  }else{
+    ext.style.display='none';
+  }
+}
+
+init();
+</script>
+</body>
+</html>

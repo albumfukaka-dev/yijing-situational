@@ -18,14 +18,14 @@ export function getTrigramEnergy(trigramName) {
 
 // 八族定义
 export const TRIBES = [
-  { id: 1, name: '蓄积', question: '怎么积累？', energy: '向内聚合，尚未释放', color: '#c9a96e', icon: '蓄' },
-  { id: 2, name: '扩张', question: '怎么乘势？', energy: '向外释放，持续上升', color: '#d4b878', icon: '扩' },
-  { id: 3, name: '受阻', question: '怎么突破？', energy: '向前遇阻，停滞或冲突', color: '#8b7b5a', icon: '阻' },
-  { id: 4, name: '重构', question: '怎么重建？', energy: '旧结构瓦解，系统重组', color: '#6a8a7a', icon: '构' },
-  { id: 5, name: '连接', question: '怎么协作？', energy: '向外建立关系网络', color: '#7a82a0', icon: '连' },
-  { id: 6, name: '收敛', question: '怎么守住？', energy: '主动向内，减少暴露', color: '#6a8a9a', icon: '敛' },
-  { id: 7, name: '转折', question: '怎么跨越？', energy: '周期完成，进入临界点', color: '#a0896a', icon: '折' },
-  { id: 8, name: '校准', question: '怎么归正？', energy: '回归本质，与规律对齐', color: '#7a9a7a', icon: '准' },
+  { id: 1, name: '蓄积', question: '怎么积累？', energy: '向内聚合，尚未释放', color: '#b8944a', icon: '蓄' },
+  { id: 2, name: '扩张', question: '怎么乘势？', energy: '向外释放，持续上升', color: '#d4a84a', icon: '扩' },
+  { id: 3, name: '受阻', question: '怎么突破？', energy: '向前遇阻，停滞或冲突', color: '#9a7352', icon: '阻' },
+  { id: 6, name: '收敛', question: '怎么守住？', energy: '主动向内，减少暴露', color: '#6a7a8e', icon: '敛' },
+  { id: 7, name: '转折', question: '怎么跨越？', energy: '周期完成，进入临界点', color: '#8a8a7a', icon: '折' },
+  { id: 4, name: '重构', question: '怎么重建？', energy: '旧结构瓦解，系统重组', color: '#6a8a6a', icon: '构' },
+  { id: 5, name: '连接', question: '怎么协作？', energy: '向外建立关系网络', color: '#7a6a90', icon: '连' },
+  { id: 8, name: '校准', question: '怎么归正？', energy: '回归本质，与规律对齐', color: '#5a8a8a', icon: '准' },
 ];
 
 // 64卦完整数据
@@ -58,7 +58,7 @@ export const HEXAGRAMS = [
   { num: 39, name: '蹇', pinyin: 'jiǎn', fullName: '水山蹇', upper: '坎', lower: '艮', tribe: 3, status: 'done', file: 'jian_39_v1.html', hook: '冬天的树也在长根' },
   { num: 40, name: '解', pinyin: 'jiě', fullName: '雷水解', upper: '震', lower: '坎', tribe: 3, status: 'done', file: 'jie_40_v1.html', hook: '松绑的那一刻' },
   { num: 47, name: '困', pinyin: 'kùn', fullName: '泽水困', upper: '兑', lower: '坎', tribe: 3, status: 'done', file: 'kun_47_v1.html', hook: '困住的是形式，不是你' },
-  { num: 51, name: '震', pinyin: 'zhèn', fullName: '震为雷', upper: '震', lower: '震', tribe: 3, status: 'pending', file: null, hook: '惊到了，而后知有序' },
+  { num: 51, name: '震', pinyin: 'zhèn', fullName: '震为雷', upper: '震', lower: '震', tribe: 3, status: 'done', file: 'zhen_51_v1.html', hook: '关于不确定性的启示' },
 
   // ④ 重构族 (8卦)
   { num: 18, name: '蛊', pinyin: 'gǔ', fullName: '山风蛊', upper: '艮', lower: '巽', tribe: 4, status: 'pending', file: null, hook: '烂在根上的，要从根治' },
@@ -71,7 +71,7 @@ export const HEXAGRAMS = [
   { num: 59, name: '涣', pinyin: 'huàn', fullName: '风水涣', upper: '巽', lower: '坎', tribe: 4, status: 'pending', file: null, hook: '散开，才能重新聚' },
 
   // ⑤ 连接族 (8卦)
-  { num: 7,  name: '师', pinyin: 'shī', fullName: '地水师', upper: '坤', lower: '坎', tribe: 5, status: 'pending', file: null, hook: '带人走的人，要先自己走过那段路' },
+  { num: 7,  name: '师', pinyin: 'shī', fullName: '地水师', upper: '坤', lower: '坎', tribe: 5, status: 'done', file: 'shi_07_v1.html', hook: '比起老师，我们更需要镜子' },
   { num: 13, name: '同人', pinyin: 'tóng rén', fullName: '天火同人', upper: '乾', lower: '离', tribe: 5, status: 'done', file: 'tongren_13_v1.html', hook: '同频的人，在旷野里找' },
   { num: 17, name: '随', pinyin: 'suí', fullName: '泽雷随', upper: '兑', lower: '震', tribe: 5, status: 'pending', file: null, hook: '跟着走，是一种信任的练习' },
   { num: 31, name: '咸', pinyin: 'xián', fullName: '泽山咸', upper: '兑', lower: '艮', tribe: 5, status: 'pending', file: null, hook: '心动了，动的是什么' },
@@ -83,21 +83,21 @@ export const HEXAGRAMS = [
   // ⑥ 收敛族 (8卦)
   { num: 2,  name: '坤', pinyin: 'kūn', fullName: '坤为地', upper: '坤', lower: '坤', tribe: 6, status: 'done', file: 'kun_02_v1.html', hook: '你接住的，都会变成你的根' },
   { num: 15, name: '谦', pinyin: 'qiān', fullName: '地山谦', upper: '坤', lower: '艮', tribe: 6, status: 'done', file: 'qian_15_v2.html', hook: '守住已有的，不是建墙，是扎根' },
-  { num: 16, name: '豫', pinyin: 'yù', fullName: '雷地豫', upper: '震', lower: '坤', tribe: 6, status: 'pending', file: null, hook: '预备，是安静时做的动作' },
-  { num: 23, name: '剥', pinyin: 'bō', fullName: '山地剥', upper: '艮', lower: '坤', tribe: 6, status: 'pending', file: null, hook: '一层一层被剥掉，直到剩下真的' },
-  { num: 33, name: '遁', pinyin: 'dùn', fullName: '天山遁', upper: '乾', lower: '艮', tribe: 6, status: 'pending', file: null, hook: '退，是为了保存火种' },
-  { num: 44, name: '姤', pinyin: 'gòu', fullName: '天风姤', upper: '乾', lower: '巽', tribe: 6, status: 'pending', file: null, hook: '不期而遇的试探' },
-  { num: 52, name: '艮', pinyin: 'gèn', fullName: '艮为山', upper: '艮', lower: '艮', tribe: 6, status: 'pending', file: null, hook: '该停的时候，停得住吗' },
-  { num: 56, name: '旅', pinyin: 'lǚ', fullName: '火山旅', upper: '离', lower: '艮', tribe: 6, status: 'pending', file: null, hook: '在路上的人，轻装才走得远' },
+  { num: 16, name: '豫', pinyin: 'yù', fullName: '雷地豫', upper: '震', lower: '坤', tribe: 6, status: 'done', file: 'yu_16_v1.html', hook: '顺势而为，还是顺势而废' },
+  { num: 23, name: '剥', pinyin: 'bō', fullName: '山地剥', upper: '艮', lower: '坤', tribe: 6, status: 'done', file: 'bo_23_v1.html', hook: '腐烂，是果实的生命过程之一' },
+  { num: 33, name: '遁', pinyin: 'dùn', fullName: '天山遁', upper: '乾', lower: '艮', tribe: 6, status: 'done', file: 'dun_33_v1.html', hook: '你是遁，还是逃？' },
+  { num: 44, name: '姤', pinyin: 'gòu', fullName: '天风姤', upper: '乾', lower: '巽', tribe: 6, status: 'done', file: 'gou_44_v1.html', hook: '姤，只能是种自我经验备忘' },
+  { num: 52, name: '艮', pinyin: 'gèn', fullName: '艮为山', upper: '艮', lower: '艮', tribe: 6, status: 'done', file: 'gen_52_v1.html', hook: '你能理解自己的慢吗' },
+  { num: 56, name: '旅', pinyin: 'lǚ', fullName: '火山旅', upper: '离', lower: '艮', tribe: 6, status: 'done', file: 'lv_56_v1.html', hook: '心里一直在盖的那栋房子' },
 
   // ⑦ 转折族 (8卦)
-  { num: 25, name: '无妄', pinyin: 'wú wàng', fullName: '天雷无妄', upper: '乾', lower: '震', tribe: 7, status: 'pending', file: null, hook: '没有预设，才接得住真实' },
-  { num: 32, name: '恒', pinyin: 'héng', fullName: '雷风恒', upper: '震', lower: '巽', tribe: 7, status: 'pending', file: null, hook: '持久不是重复，是持续地活' },
-  { num: 42, name: '益', pinyin: 'yì', fullName: '风雷益', upper: '巽', lower: '震', tribe: 7, status: 'pending', file: null, hook: '真正的增益，是上面给下面' },
-  { num: 53, name: '渐', pinyin: 'jiàn', fullName: '风山渐', upper: '巽', lower: '艮', tribe: 7, status: 'pending', file: null, hook: '一步一步，才是到那里的方式' },
-  { num: 55, name: '丰', pinyin: 'fēng', fullName: '雷火丰', upper: '震', lower: '离', tribe: 7, status: 'pending', file: null, hook: '满到极致之后呢' },
-  { num: 62, name: '小过', pinyin: 'xiǎo guò', fullName: '雷山小过', upper: '震', lower: '艮', tribe: 7, status: 'pending', file: null, hook: '小事上稍微过一点' },
-  { num: 63, name: '既济', pinyin: 'jì jì', fullName: '水火既济', upper: '坎', lower: '离', tribe: 7, status: 'pending', file: null, hook: '成了以后，才是真正的开始' },
+  { num: 25, name: '无妄', pinyin: 'wú wàng', fullName: '天雷无妄', upper: '乾', lower: '震', tribe: 7, status: 'done', file: 'wuwang_25_v1.html', hook: '谁没有妄呢' },
+  { num: 32, name: '恒', pinyin: 'héng', fullName: '雷风恒', upper: '震', lower: '巽', tribe: 7, status: 'done', file: 'heng_32_v1.html', hook: '念念不忘，必有回响' },
+  { num: 42, name: '益', pinyin: 'yì', fullName: '风雷益', upper: '巽', lower: '震', tribe: 7, status: 'done', file: 'yi_42_v1.html', hook: '保持积极的尝试' },
+  { num: 53, name: '渐', pinyin: 'jiàn', fullName: '风山渐', upper: '巽', lower: '艮', tribe: 7, status: 'done', file: 'jian_53_v1.html', hook: '致敬所有专注于创作的人' },
+  { num: 55, name: '丰', pinyin: 'fēng', fullName: '雷火丰', upper: '震', lower: '离', tribe: 7, status: 'done', file: 'feng_55_v1.html', hook: '你的燃烧，遇上一场爆发' },
+  { num: 62, name: '小过', pinyin: 'xiǎo guò', fullName: '雷山小过', upper: '震', lower: '艮', tribe: 7, status: 'done', file: 'xiaoguo_62_v1.html', hook: '心里有数的人，不怕犯小错' },
+  { num: 63, name: '既济', pinyin: 'jì jì', fullName: '水火既济', upper: '坎', lower: '离', tribe: 7, status: 'done', file: 'jiji_63_v1.html', hook: '我们经历无数个既济，就像无数次呼吸' },
   { num: 64, name: '未济', pinyin: 'wèi jì', fullName: '火水未济', upper: '离', lower: '坎', tribe: 7, status: 'done', file: 'weiji_64_v1.html', hook: '64卦的最后一句话：继续' },
 
   // ⑧ 校准族 (8卦)

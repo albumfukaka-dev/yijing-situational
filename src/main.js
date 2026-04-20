@@ -58,10 +58,11 @@ function renderYaoMini(hexagram) {
 
 function renderNav(active = '') {
   const items = [
-    { id: 'home', icon: '☰', label: '情境', hash: '#/' },
+    { id: 'home', icon: '▣', label: '情境', hash: '#/' },
     { id: 'divine', icon: '◎', label: '抽卦', hash: '#/divine' },
     { id: 'list', icon: '≡', label: '索引', hash: '#/list' },
     { id: 'explore-nav', icon: '◈', label: '探索', hash: '#/explore' },
+    { id: 'ruler', icon: '⇌', label: '分析尺', hash: '#/ruler' },
   ];
   return `
     <nav class="bottom-nav">
@@ -634,6 +635,20 @@ function renderAbout() {
   `;
 }
 
+// --- Ruler ---
+function renderRuler() {
+  app.innerHTML = `
+    <div class="page" style="padding-bottom: 0;">
+      <iframe
+        src="${import.meta.env.BASE_URL || '/'}cards/yijing_ruler_v1.html"
+        title="易经分析尺"
+        style="width: 100%; height: calc(100vh - 56px); border: none; display: block; flex: 1;"
+      ></iframe>
+    </div>
+    ${renderNav('ruler')}
+  `;
+}
+
 // ============================================
 // Route Definitions
 // ============================================
@@ -645,6 +660,7 @@ route('/list', renderList);
 route('/explore', renderExploreIndex);
 route('/explore/:num', renderExplore);
 route('/about', renderAbout);
+route('/ruler', renderRuler);
 
 // ============================================
 // Init
