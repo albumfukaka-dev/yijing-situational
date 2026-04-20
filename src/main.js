@@ -172,69 +172,46 @@ let previousHash = null;
 
 function renderViewer(params) {
   const h = getHexagram(parseInt(params.num));
-  if (!h || h.status !== 'done') { navigate('#/'); return; }
+  if (!h || h.status !== 'done') {
+    navigate('#/');
+    return;
+  }
 
   const tribe = getTribe(h.tribe);
   const DESIGN_W = 540;
   const DESIGN_H = 720;
-  const TOTAL_CARDS = 3;
-  const CARD_LABELS = ['好面', '洞见与行动', '情境'];
-  let currentCard = 0;
 
   app.innerHTML = `
-    <div class="page" style="padding-bottom:0;">
+    <div class="page" style="padding-bottom: 0;">
       <div class="viewer-header">
         <button class="viewer-close" id="viewer-back">‹ 返回</button>
         <span class="viewer-title">${h.name} · ${h.fullName}</span>
-        <span style="width:40px;"></span>
+        <span style="width: 40px;"></span>
       </div>
       <div class="viewer-body" id="viewer-body">
         <div class="viewer-iframe-wrap" id="iframe-wrap">
-          <iframe id="card-iframe" src="${import.meta.env.BASE_URL}cards/${h.file}" title="${h.name} 卡片"></iframe>
+          <iframe src="${import.meta.env.BASE_URL}cards/${h.file}" title="${h.name} 卡片"></iframe>
         </div>
       </div>
-      <div class="card-nav" id="card-nav">
-        <button class="card-nav-btn" id="card-prev">‹</button>
-        <div class="card-dots" id="card-dots">
-          ${Array.from({length:TOTAL_CARDS},(_,i)=>`<span class="card-dot${i===0?' active':''}" data-i="${i}"></span>`).join('')}
+      <div class="viewer-info" style="text-align: center; padding: 16px 24px 24px;">
+        <div style="font-size: 11px; color: var(--dark); letter-spacing: 2px;">
+          「${tribe.name}」情境 · ${tribe.question}
         </div>
-        <button class="card-nav-btn" id="card-next">›</button>
-      </div>
-      <div class="viewer-info" style="text-align:center;padding:12px 24px 20px;">
-        <div style="font-size:10px;color:var(--dark);letter-spacing:2px;" id="card-label">CARD 1 · ${CARD_LABELS[0]}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:6px;letter-spacing:0.5px;">${h.hook}</div>
+        <div style="font-size: 12px; color: var(--muted); margin-top: 8px; letter-spacing: 0.5px;">
+          ${h.hook}
+        </div>
       </div>
     </div>
   `;
 
-  const iframe = document.getElementById('card-iframe');
-  const dots = document.querySelectorAll('.card-dot');
-  const label = document.getElementById('card-label');
-
-  function goToCard(idx) {
-    currentCard = Math.max(0, Math.min(TOTAL_CARDS - 1, idx));
-    iframe.contentWindow.scrollTo({ top: currentCard * DESIGN_H, behavior: 'smooth' });
-    dots.forEach((d, i) => d.classList.toggle('active', i === currentCard));
-    label.textContent = `CARD ${currentCard + 1} · ${CARD_LABELS[currentCard]}`;
-  }
-
-  iframe.onload = () => {
-    try {
-      iframe.contentDocument.documentElement.style.overflow = 'hidden';
-    } catch(e) {}
-    goToCard(0);
-  };
-
-  document.getElementById('card-prev').addEventListener('click', () => goToCard(currentCard - 1));
-  document.getElementById('card-next').addEventListener('click', () => goToCard(currentCard + 1));
-  dots.forEach(d => d.addEventListener('click', () => goToCard(+d.dataset.i)));
-
+  // Scale iframe to fit viewport
   function scaleIframe() {
     const wrap = document.getElementById('iframe-wrap');
     if (!wrap) return;
     const vw = Math.min(window.innerWidth, 540);
     const scale = Math.min(vw / DESIGN_W, 1);
     wrap.style.setProperty('--iframe-scale', scale);
+    // Adjust wrapper height so it doesn't overflow (transform doesn't affect layout)
     wrap.style.height = (DESIGN_H * scale) + 'px';
   }
   scaleIframe();

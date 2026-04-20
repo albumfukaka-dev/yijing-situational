@@ -461,34 +461,7 @@ input { border: none; outline: none; background: none; font-family: inherit; col
   border: none;
   background: var(--bg);
   display: block;
-  overflow: hidden;
 }
-
-/* Card Navigation */
-.card-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 10px 0 6px;
-}
-.card-nav-btn {
-  font-size: 22px;
-  color: var(--dark);
-  padding: 4px 12px;
-  transition: var(--transition);
-  letter-spacing: 0;
-}
-.card-nav-btn:hover, .card-nav-btn:active { color: var(--warm); }
-.card-dots { display: flex; gap: 8px; align-items: center; }
-.card-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: var(--faint);
-  cursor: pointer;
-  transition: var(--transition);
-}
-.card-dot.active { background: var(--warm); transform: scale(1.3); }
 
 /* ===== DIVINATION PAGE ===== */
 .divine-container {
