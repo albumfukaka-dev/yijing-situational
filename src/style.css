@@ -1472,3 +1472,86 @@ input { border: none; outline: none; background: none; font-family: inherit; col
 .palace-member.current .palace-member-role {
   color: var(--warm-dim);
 }
+
+/* ============================================
+   LIGHT THEME — 暖纸阅读方案
+   参考：意外之喜·探索信息流 配色体系
+   ============================================ */
+
+[data-theme="light"] {
+  --bg: #f5f0eb;
+  --bg-elevated: #ede8e2;
+  --bg-card: #f5f0eb;
+  --bg-card-hover: #ede8e0;
+
+  --warm: #a87e38;
+  --warm-bright: #c9a96e;
+  --warm-dim: #c9a96e;
+  --warm-glow: rgba(168, 126, 56, 0.06);
+
+  --cold: #2e5a78;
+  --cold-dim: #5a7a8a;
+
+  --light: #1a1815;
+  --mid: #3d3830;
+  --muted: #b8b0a8;
+  --dark: #c8c0b8;
+  --faint: #d4ccc4;
+  --line: #ddd8d0;
+}
+
+/* App shell 组件的亮色调整 */
+[data-theme="light"] .bottom-nav {
+  background: rgba(245, 240, 235, 0.92);
+  border-top-color: var(--line);
+}
+[data-theme="light"] .viewer-header {
+  background: rgba(245, 240, 235, 0.95);
+  border-bottom-color: var(--line);
+}
+[data-theme="light"] .search-input {
+  background: var(--bg-card);
+  color: var(--light);
+}
+[data-theme="light"] .search-input::placeholder {
+  color: var(--faint);
+}
+[data-theme="light"] .tribe-card {
+  box-shadow: 0 1px 4px rgba(45, 43, 39, 0.06);
+}
+[data-theme="light"] .gua-item {
+  box-shadow: 0 1px 3px rgba(45, 43, 39, 0.04);
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 0.5px solid var(--line);
+  background: transparent;
+  color: var(--dark);
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.theme-toggle:hover {
+  border-color: var(--warm-dim);
+  color: var(--warm);
+  background: var(--warm-glow);
+}
+.theme-toggle:active { transform: scale(0.9); }
+
+/* 首页右上角的主题按钮 */
+.home-header {
+  position: relative;
+}
+.home-theme-btn {
+  position: absolute;
+  top: 44px;
+  right: 24px;
+}

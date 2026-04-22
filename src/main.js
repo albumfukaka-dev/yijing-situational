@@ -1,4 +1,75 @@
 import './style.css';
+
+// ============================================
+// Theme Management
+// ============================================
+let currentTheme = localStorage.getItem('yijing-theme') || 'dark';
+let currentIframe = null;
+
+const LIGHT_THEME_CSS = `
+body { background: #f5f0eb !important; }
+.card { background: #f5f0eb !important; border: 1px solid rgba(45,43,39,0.08) !important; box-shadow: 0 4px 16px rgba(45,43,39,0.08), 0 1px 3px rgba(45,43,39,0.06) !important; }
+.card::before { display: none !important; background: none !important; }
+:root {
+  --warm: #a87e38 !important;
+  --warm-dim: #c9a96e !important;
+  --cold: #2e5a78 !important;
+  --cold-dim: #5a7a8a !important;
+  --light: #1a1815 !important;
+  --mid: #3d3830 !important;
+  --muted: #b8b0a8 !important;
+  --dark: #c8c0b8 !important;
+  --faint: #d4ccc4 !important;
+  --line: #ddd8d0 !important;
+}
+.cover::after { background: radial-gradient(ellipse at 50% 60%, rgba(168,126,56,0.04) 0%, transparent 55%) !important; }
+.page-label { color: #b8b0a4 !important; }
+.hook-flip { color: #6a6560 !important; }
+.hook-flip em { color: #6a6560 !important; }
+.section-body em { color: var(--mid) !important; }
+.diagram-title { color: #6a6560 !important; }
+.diagram-insight em { color: var(--mid) !important; }
+.series-tag { color: #d4ccc4 !important; }
+.cover-tag { color: #d4ccc4 !important; border-color: #ddd8d0 !important; }
+.cover-num { color: #d4ccc4 !important; }
+svg line[stroke="#6a8a9a"] { stroke: #2e5a78 !important; }
+svg line[stroke="#c9a96e"] { stroke: #a87e38 !important; }
+svg path[stroke="#6a8a9a"] { stroke: #2e5a78 !important; }
+svg path[stroke="#c9a96e"] { stroke: #a87e38 !important; }
+`;
+
+function applyThemeToDocument() {
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  document.querySelectorAll('.theme-toggle').forEach(btn => {
+    btn.textContent = currentTheme === 'dark' ? '☀' : '☾';
+    btn.title = currentTheme === 'dark' ? '切换亮色' : '切换暗色';
+  });
+}
+
+function applyThemeToIframe(iframe) {
+  if (!iframe) return;
+  try {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    if (!doc || !doc.head) return;
+    const existing = doc.getElementById('yijing-theme-inject');
+    if (existing) existing.remove();
+    if (currentTheme === 'light') {
+      const style = doc.createElement('style');
+      style.id = 'yijing-theme-inject';
+      style.textContent = LIGHT_THEME_CSS;
+      doc.head.appendChild(style);
+    }
+  } catch (e) {
+    console.warn('Theme injection failed:', e);
+  }
+}
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('yijing-theme', currentTheme);
+  applyThemeToDocument();
+  applyThemeToIframe(currentIframe);
+}
 import {
   TRIBES, HEXAGRAMS,
   getHexagramsByTribe, getTribe, getHexagram, getTribeProgress,
@@ -111,6 +182,7 @@ function renderHome() {
         <div class="home-brand">易经 · <span>情境识别</span></div>
         <div class="home-sub">在 64 种处境中，找到你的那一种</div>
         <div class="home-divider"></div>
+        <button class="theme-toggle home-theme-btn" id="home-theme-btn" title="切换主题">${currentTheme === 'dark' ? '☀' : '☾'}</button>
       </header>
       <div class="section-title">八 种 情 境</div>
       <div class="tribe-grid">
@@ -119,6 +191,7 @@ function renderHome() {
     </div>
     ${renderNav('home')}
   `;
+  document.getElementById('home-theme-btn').addEventListener('click', toggleTheme);
 }
 
 // --- Tribe Detail ---
@@ -181,16 +254,18 @@ function renderViewer(params) {
   const DESIGN_W = 540;
   const DESIGN_H = 720;
 
+  currentIframe = null;
+
   app.innerHTML = `
     <div class="page" style="padding-bottom: 0;">
       <div class="viewer-header">
         <button class="viewer-close" id="viewer-back">‹ 返回</button>
         <span class="viewer-title">${h.name} · ${h.fullName}</span>
-        <span style="width: 40px;"></span>
+        <button class="theme-toggle" id="viewer-theme-btn" title="切换主题">${currentTheme === 'dark' ? '☀' : '☾'}</button>
       </div>
       <div class="viewer-body" id="viewer-body">
         <div class="viewer-iframe-wrap" id="iframe-wrap">
-          <iframe src="${import.meta.env.BASE_URL}cards/${h.file}" title="${h.name} 卡片"></iframe>
+          <iframe src="${import.meta.env.BASE_URL}cards/${h.file}" title="${h.name} 卡片" id="card-iframe"></iframe>
         </div>
       </div>
       <div class="viewer-info" style="text-align: center; padding: 16px 24px 24px;">
@@ -203,6 +278,14 @@ function renderViewer(params) {
       </div>
     </div>
   `;
+
+  // Wire theme toggle
+  document.getElementById('viewer-theme-btn').addEventListener('click', toggleTheme);
+
+  // Save iframe reference and inject theme on load
+  const iframe = document.getElementById('card-iframe');
+  currentIframe = iframe;
+  iframe.addEventListener('load', () => applyThemeToIframe(iframe));
 
   // Scale iframe to fit viewport
   function scaleIframe() {
@@ -674,4 +757,7 @@ function handleRoute() {
 }
 
 window.addEventListener('hashchange', handleRoute);
-window.addEventListener('load', handleRoute);
+window.addEventListener('load', () => {
+  applyThemeToDocument(); // apply saved theme before first render
+  handleRoute();
+});
