@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>离·30</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #1a1a18; display: flex; flex-direction: column; align-items: center; gap: 48px; padding: 48px 20px; min-height: 100vh; }
+.page-label { font-family: "PingFang SC", sans-serif; font-size: 10px; color: #444; letter-spacing: 2px; text-align: center; margin-bottom: 6px; }
+.card { width: 540px; height: 720px; background: #0a0a09; position: relative; overflow: hidden; flex-shrink: 0; border: 0.5px solid #222; }
+.card::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,0.006) 3px, rgba(255,255,255,0.006) 4px), repeating-linear-gradient(90deg, transparent, transparent 7px, rgba(255,255,255,0.004) 7px, rgba(255,255,255,0.004) 8px); pointer-events: none; z-index: 1; }
+.inner { position: relative; z-index: 2; width: 100%; height: 100%; display: flex; flex-direction: column; }
+.song { font-family: "Songti SC", "Noto Serif CJK SC", "SimSun", serif; }
+.ping { font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+:root {
+  --warm: #c9a96e; --warm-dim: #6b5a30;
+  --cold: #6a8a9a; --cold-dim: #3a5a68;
+  --light: #e8e0d4; --mid: #b8b0a4;
+  --muted: #555; --dark: #444; --faint: #333; --line: #2a2a28;
+}
+.brand { font-size: 10px; color: var(--faint); letter-spacing: 2px; }
+.cover .inner { padding: 44px 44px 36px; justify-content: space-between; }
+.cover::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgba(201,169,110,0.06) 0%, transparent 55%); pointer-events: none; z-index: 1; }
+.cover-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.cover-tag { font-size: 10px; letter-spacing: 3px; color: var(--muted); border: 0.5px solid var(--line); padding: 4px 10px; }
+.cover-num { font-size: 11px; letter-spacing: 1.5px; color: var(--dark); }
+.cover-center { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.cover-title-row { display: flex; align-items: baseline; gap: 16px; }
+.cover-title { font-size: 52px; color: var(--light); letter-spacing: 14px; font-weight: 400; margin-left: 14px; }
+.cover-subtitle { font-size: 12px; color: var(--dark); letter-spacing: 2px; }
+.hook-main { font-size: 18px; color: var(--light); letter-spacing: 1.5px; line-height: 2.2; margin-bottom: 14px; }
+.hook-main em { font-style: normal; color: var(--warm); }
+.hook-flip { font-size: 14.5px; color: #6a6560; letter-spacing: 0.5px; line-height: 2; }
+.hook-flip .key { color: var(--warm); font-style: normal; }
+.cover-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+.series-tag { font-size: 9px; color: #3a3a38; letter-spacing: 2px; }
+.insight .inner { padding: 44px 44px 36px; justify-content: space-between; }
+.card2-header { display: flex; align-items: baseline; gap: 12px; }
+.card2-title { font-size: 20px; color: var(--light); letter-spacing: 3px; }
+.card2-badge { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+.section-label { font-size: 10px; color: var(--warm); letter-spacing: 5px; margin-bottom: 8px; margin-top: 16px; }
+.section-body { font-size: 15px; color: var(--mid); line-height: 1.95; letter-spacing: 0.5px; }
+.section-body em { color: #d4cabb; font-style: normal; }
+.section-body .key { color: var(--warm); font-style: normal; }
+.divider { width: 24px; height: 0.5px; background: var(--line); margin: 10px 0; }
+.diagram .inner { padding: 40px 36px 36px; justify-content: space-between; align-items: center; }
+.diagram-title { font-size: 12px; color: var(--muted); letter-spacing: 4px; text-align: center; }
+.diagram-body { width: 100%; }
+.diagram-insight { font-size: 13.5px; color: var(--mid); line-height: 2.1; letter-spacing: 0.5px; text-align: left; padding: 0 12px; }
+.diagram-insight em { color: #d4cabb; font-style: normal; }
+.diagram-insight .key { color: var(--warm); }
+</style>
+</head>
+<body>
+
+<!-- ===== CARD 1: COVER ===== -->
+<div class="page-label ping">CARD 1 · 封面</div>
+<div class="card cover">
+  <div class="inner">
+    <div class="cover-top">
+      <span class="ping cover-tag">校 准</span>
+      <span class="ping cover-num">第 30 卦</span>
+    </div>
+    <div class="cover-center">
+      <div class="cover-title-row">
+        <span class="song cover-title">离</span>
+        <span class="ping cover-subtitle">离为火</span>
+      </div>
+      <div>
+        <svg viewBox="0 0 240 196" width="210">
+          <defs>
+            <radialGradient id="cg30" cx="50%" cy="55%" r="40%">
+              <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.07"/>
+              <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="240" height="196" fill="url(#cg30)"/>
+          <text x="120" y="13" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="3">离 · 火</text>
+          <!-- 上卦：离 从下往上读：阳阴阳 → 图从上往下画：阳阴阳 -->
+          <line x1="32" y1="32" x2="208" y2="32" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="57" x2="100" y2="57" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="140" y1="57" x2="208" y2="57" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="82" x2="208" y2="82" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="50" y1="103" x2="190" y2="103" stroke="#1e1e1c" stroke-width="0.5" stroke-dasharray="2,5"/>
+          <!-- 下卦：离 从下往上读：阳阴阳 → 图从上往下画：阳阴阳 -->
+          <line x1="32" y1="122" x2="208" y2="122" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="147" x2="100" y2="147" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="140" y1="147" x2="208" y2="147" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <line x1="32" y1="172" x2="208" y2="172" stroke="#c9a96e" stroke-width="4" stroke-linecap="round"/>
+          <text x="120" y="192" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="3">离 · 火</text>
+        </svg>
+      </div>
+    </div>
+    <div style="padding: 0 4px;">
+      <div class="song hook-main">
+        计较、执着、贪恋，<br>
+        <em>这样的火焰，是渴望支配的火焰。</em>
+      </div>
+      <div class="song hook-flip">
+        无所谓、也无所畏，<br>
+        沉浸入心流。<br>
+        <span class="key">这样的燃烧，才会迸发出美。</span>
+      </div>
+    </div>
+    <div class="cover-bottom">
+      <span class="ping brand">@野野野在游戏人间</span>
+      <span class="ping series-tag">易经 · 情境识别</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== CARD 2: INSIGHT + ACTION ===== -->
+<div class="page-label ping">CARD 2 · 洞见与行动</div>
+<div class="card insight">
+  <div class="inner">
+    <div class="card2-header">
+      <span class="song card2-title">离 · 30</span>
+      <span class="ping card2-badge">离为火</span>
+    </div>
+    <div>
+      <div class="ping section-label">这 个 卦 在 说 什 么</div>
+      <div class="song section-body">
+        离，火。外明内空，它本不执着。<br>
+        <em>但人是执着的。</em><br><br>
+        照耀了就想要回应，燃烧了就想被看见。<br>
+        这不是火的问题。<br>
+        「离，丽也。」火是依附的，是过程。<br>
+        给出、消耗、照亮、不留存——<br><br>
+        <span class="key">燃烧不问为什么燃烧，不问烧完之后怎样。</span>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="ping section-label">怎 么 做</div>
+      <div class="song section-body">
+        <em>「柔丽乎中正，故亨。」</em><br>
+        不是找到热情，再去燃烧。<br>
+        是找到那个真实的「想」。<br>
+        想唱，想写，想动，想探究，是你本真的好奇驱动。<br>
+        那个「想」是入口。<br><br>
+        当你完全在燃烧里，执着会自然消失。<br>
+        <span class="key">呈现，而不占有呈现本身。</span>
+      </div>
+    </div>
+    <div style="margin-top:auto;">
+      <span class="ping brand">@野野野在游戏人间</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== CARD 3: ENERGY DIAGRAM ===== -->
+<div class="page-label ping">CARD 3 · 能量图解</div>
+<div class="card diagram">
+  <div class="inner">
+    <div>
+      <span class="ping diagram-title">离 · 能 量 结 构</span>
+    </div>
+    <div class="diagram-body">
+      <svg viewBox="0 0 460 340" width="460" style="display:block; margin:0 auto;">
+        <defs>
+          <radialGradient id="g3_30" cx="50%" cy="50%" r="40%">
+            <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.04"/>
+            <stop offset="100%" stop-color="#c9a96e" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect x="0" y="10" width="460" height="310" fill="url(#g3_30)"/>
+
+        <!-- 外卦：离·火 -->
+        <text x="230" y="18" text-anchor="middle" fill="#6b5a30" font-size="10" font-family="PingFang SC, sans-serif" letter-spacing="4">外 卦 · 离 · 火</text>
+        <rect x="90" y="30" width="280" height="110" rx="2" fill="none" stroke="#6b5a30" stroke-width="0.5" stroke-dasharray="3,4"/>
+        <!-- 离 三爻：阳 阴 阳 -->
+        <line x1="168" y1="56" x2="289" y2="56" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="168" y1="80" x2="215" y2="80" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="80" x2="289" y2="80" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="168" y1="104" x2="289" y2="104" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <!-- 离 能量箭头：向上 + 向外放射 ↑ ← → -->
+        <line x1="228" y1="100" x2="228" y2="42" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <path d="M225 47 L228 40 L231 47" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <line x1="155" y1="80" x2="110" y2="80" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <path d="M115 77 L108 80 L115 83" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <line x1="305" y1="80" x2="350" y2="80" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <path d="M345 77 L352 80 L345 83" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+        <!-- 侧注 -->
+        <text x="108" y="62" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="2">热情洋溢的</text>
+        <text x="354" y="62" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="2">场域</text>
+
+        <!-- 分隔线 -->
+        <line x1="70" y1="166" x2="390" y2="166" stroke="#2a2825" stroke-width="0.5" stroke-dasharray="1.5,6"/>
+        <text x="405" y="169" fill="#444" font-size="9" font-family="PingFang SC, sans-serif">离</text>
+
+        <!-- 内卦：离·火 -->
+        <rect x="90" y="186" width="280" height="110" rx="2" fill="none" stroke="#6b5a30" stroke-width="0.5" stroke-dasharray="3,4"/>
+        <line x1="168" y1="212" x2="289" y2="212" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="168" y1="238" x2="215" y2="238" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="242" y1="238" x2="289" y2="238" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <line x1="168" y1="264" x2="289" y2="264" stroke="#c9a96e" stroke-width="3" stroke-linecap="round"/>
+        <!-- 内离 能量箭头 -->
+        <line x1="228" y1="258" x2="228" y2="200" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+        <path d="M225 205 L228 198 L231 205" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+        <line x1="155" y1="238" x2="110" y2="238" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+        <path d="M115 235 L108 238 L115 241" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+        <line x1="305" y1="238" x2="350" y2="238" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+        <path d="M345 235 L352 238 L345 241" fill="none" stroke="#c9a96e" stroke-width="0.5" opacity="0.35"/>
+        <!-- 侧注 -->
+        <text x="108" y="222" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="2">纯粹的</text>
+        <text x="354" y="226" text-anchor="middle" fill="#6b5a30" font-size="9" font-family="PingFang SC, sans-serif" writing-mode="vertical-rl" letter-spacing="2">燃烧渴望</text>
+
+        <text x="230" y="316" text-anchor="middle" fill="#6b5a30" font-size="10" font-family="PingFang SC, sans-serif" letter-spacing="4">内 卦 · 离 · 火</text>
+        <text x="230" y="336" text-anchor="middle" fill="#555" font-size="9" font-family="PingFang SC, sans-serif" letter-spacing="2">不执着的热情 × 充分的燃烧 → 让美感自然展现</text>
+      </svg>
+    </div>
+    <div style="padding: 0 8px;">
+      <div class="song diagram-insight">
+        外离，是热情洋溢的场域。<br>
+        内离，是你纯粹的燃烧渴望。<br><br>
+        充分燃烧的人，最让人着迷。<br>
+        不是因为他想让人着迷，<br>
+        <span class="key">是因为他忘了这件事，只是燃烧着。</span>
+      </div>
+      <div style="margin-top: 14px;">
+        <span class="ping brand">@野野野在游戏人间</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

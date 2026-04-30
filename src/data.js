@@ -61,20 +61,20 @@ export const HEXAGRAMS = [
   { num: 51, name: '震', pinyin: 'zhèn', fullName: '震为雷', upper: '震', lower: '震', tribe: 3, status: 'done', file: 'zhen_51_v1.html', hook: '关于不确定性的启示' },
 
   // ④ 重构族 (8卦)
-  { num: 18, name: '蛊', pinyin: 'gǔ', fullName: '山风蛊', upper: '艮', lower: '巽', tribe: 4, status: 'pending', file: null, hook: '烂在根上的，要从根治' },
-  { num: 21, name: '噬嗑', pinyin: 'shì kè', fullName: '火雷噬嗑', upper: '离', lower: '震', tribe: 4, status: 'pending', file: null, hook: '咬碎障碍，才能通' },
+  { num: 18, name: '蛊', pinyin: 'gǔ', fullName: '山风蛊', upper: '艮', lower: '巽', tribe: 4, status: 'done', file: 'gu_18_v1.html', hook: '当熟悉变成麻木' },
+  { num: 21, name: '噬嗑', pinyin: 'shì kè', fullName: '火雷噬嗑', upper: '离', lower: '震', tribe: 4, status: 'done', file: 'shike_21_v1.html', hook: '是时候了：爆发，也是一种清醒' },
   { num: 28, name: '大过', pinyin: 'dà guò', fullName: '泽风大过', upper: '兑', lower: '巽', tribe: 4, status: 'pending', file: null, hook: '撑不住的，就该放下了' },
   { num: 41, name: '损', pinyin: 'sǔn', fullName: '山泽损', upper: '艮', lower: '兑', tribe: 4, status: 'pending', file: null, hook: '减少，就是另一种增加' },
-  { num: 48, name: '井', pinyin: 'jǐng', fullName: '水风井', upper: '坎', lower: '巽', tribe: 4, status: 'pending', file: null, hook: '不枯的源头在深处' },
+  { num: 48, name: '井', pinyin: 'jǐng', fullName: '水风井', upper: '坎', lower: '巽', tribe: 4, status: 'done', file: 'jing_48_v1.html', hook: '水不找人，人来找水' },
   { num: 49, name: '革', pinyin: 'gé', fullName: '泽火革', upper: '兑', lower: '离', tribe: 4, status: 'pending', file: null, hook: '该变的时候，别留恋旧皮' },
   { num: 50, name: '鼎', pinyin: 'dǐng', fullName: '火风鼎', upper: '离', lower: '巽', tribe: 4, status: 'done', file: 'ding_50_v2.html', hook: '你以为是新开始，逻辑还是旧的' },
-  { num: 59, name: '涣', pinyin: 'huàn', fullName: '风水涣', upper: '巽', lower: '坎', tribe: 4, status: 'pending', file: null, hook: '散开，才能重新聚' },
+  { num: 59, name: '涣', pinyin: 'huàn', fullName: '风水涣', upper: '巽', lower: '坎', tribe: 4, status: 'done', file: 'huan_59_v1.html', hook: '失焦，然后重新聚焦' },
 
   // ⑤ 连接族 (8卦)
   { num: 7,  name: '师', pinyin: 'shī', fullName: '地水师', upper: '坤', lower: '坎', tribe: 5, status: 'done', file: 'shi_07_v1.html', hook: '比起老师，我们更需要镜子' },
   { num: 13, name: '同人', pinyin: 'tóng rén', fullName: '天火同人', upper: '乾', lower: '离', tribe: 5, status: 'done', file: 'tongren_13_v1.html', hook: '同频的人，在旷野里找' },
-  { num: 17, name: '随', pinyin: 'suí', fullName: '泽雷随', upper: '兑', lower: '震', tribe: 5, status: 'pending', file: null, hook: '跟着走，是一种信任的练习' },
-  { num: 31, name: '咸', pinyin: 'xián', fullName: '泽山咸', upper: '兑', lower: '艮', tribe: 5, status: 'pending', file: null, hook: '心动了，动的是什么' },
+  { num: 17, name: '随', pinyin: 'suí', fullName: '泽雷随', upper: '兑', lower: '震', tribe: 5, status: 'done', file: 'sui_17_v1.html', hook: '跟随，都是在安顿一颗不确定的心' },
+  { num: 31, name: '咸', pinyin: 'xián', fullName: '泽山咸', upper: '兑', lower: '艮', tribe: 5, status: 'done', file: 'xian_31_v1.html', hook: '咸：情感的调味学' },
   { num: 37, name: '家人', pinyin: 'jiā rén', fullName: '风火家人', upper: '巽', lower: '离', tribe: 5, status: 'pending', file: null, hook: '最近的人，最真的力量场' },
   { num: 38, name: '睽', pinyin: 'kuí', fullName: '火泽睽', upper: '离', lower: '兑', tribe: 5, status: 'pending', file: null, hook: '分开看，反而看清了' },
   { num: 54, name: '归妹', pinyin: 'guī mèi', fullName: '雷泽归妹', upper: '震', lower: '兑', tribe: 5, status: 'pending', file: null, hook: '非你所选的位置，也有你的课' },
@@ -101,11 +101,11 @@ export const HEXAGRAMS = [
   { num: 64, name: '未济', pinyin: 'wèi jì', fullName: '火水未济', upper: '离', lower: '坎', tribe: 7, status: 'done', file: 'weiji_64_v1.html', hook: '64卦的最后一句话：继续' },
 
   // ⑧ 校准族 (8卦)
-  { num: 20, name: '观', pinyin: 'guān', fullName: '风地观', upper: '巽', lower: '坤', tribe: 8, status: 'pending', file: null, hook: '站远了，才看见全局' },
+  { num: 20, name: '观', pinyin: 'guān', fullName: '风地观', upper: '巽', lower: '坤', tribe: 8, status: 'done', file: 'guan_20_v1.html', hook: '观，是驻足，然后只是看' },
   { num: 22, name: '贲', pinyin: 'bì', fullName: '山火贲', upper: '艮', lower: '离', tribe: 8, status: 'pending', file: null, hook: '美，是给真实的一层光' },
   { num: 24, name: '复', pinyin: 'fù', fullName: '地雷复', upper: '坤', lower: '震', tribe: 8, status: 'pending', file: null, hook: '回到起点，但你不一样了' },
   { num: 27, name: '颐', pinyin: 'yí', fullName: '山雷颐', upper: '艮', lower: '震', tribe: 8, status: 'done', file: 'yi_27_v1.html', hook: '喂什么，长成什么' },
-  { num: 30, name: '离', pinyin: 'lí', fullName: '离为火', upper: '离', lower: '离', tribe: 8, status: 'pending', file: null, hook: '光要有附着，才照得远' },
+  { num: 30, name: '离', pinyin: 'lí', fullName: '离为火', upper: '离', lower: '离', tribe: 8, status: 'done', file: 'li_30_v1.html', hook: '生命的美感，源自充分的燃烧' },
   { num: 57, name: '巽', pinyin: 'xùn', fullName: '巽为风', upper: '巽', lower: '巽', tribe: 8, status: 'pending', file: null, hook: '渗透的力量，是不对抗' },
   { num: 60, name: '节', pinyin: 'jié', fullName: '水泽节', upper: '坎', lower: '兑', tribe: 8, status: 'pending', file: null, hook: '节制，不是约束，是知道界限在哪' },
   { num: 61, name: '中孚', pinyin: 'zhōng fú', fullName: '风泽中孚', upper: '巽', lower: '兑', tribe: 8, status: 'done', file: 'zhongfu_61_v1.html', hook: '真诚不难，被信任才难' },
