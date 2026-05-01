@@ -102,7 +102,7 @@ export const HEXAGRAMS = [
 
   // ⑧ 校准族 (8卦)
   { num: 20, name: '观', pinyin: 'guān', fullName: '风地观', upper: '巽', lower: '坤', tribe: 8, status: 'done', file: 'guan_20_v1.html', hook: '观，是驻足，然后只是看' },
-  { num: 22, name: '贲', pinyin: 'bì', fullName: '山火贲', upper: '艮', lower: '离', tribe: 8, status: 'pending', file: null, hook: '美，是给真实的一层光' },
+  { num: 22, name: '贲', pinyin: 'bì', fullName: '山火贲', upper: '艮', lower: '离', tribe: 8, status: 'done', file: 'bi_22_v1.html', hook: '谁不想好看呢' },
   { num: 24, name: '复', pinyin: 'fù', fullName: '地雷复', upper: '坤', lower: '震', tribe: 8, status: 'pending', file: null, hook: '回到起点，但你不一样了' },
   { num: 27, name: '颐', pinyin: 'yí', fullName: '山雷颐', upper: '艮', lower: '震', tribe: 8, status: 'done', file: 'yi_27_v1.html', hook: '喂什么，长成什么' },
   { num: 30, name: '离', pinyin: 'lí', fullName: '离为火', upper: '离', lower: '离', tribe: 8, status: 'done', file: 'li_30_v1.html', hook: '生命的美感，源自充分的燃烧' },
